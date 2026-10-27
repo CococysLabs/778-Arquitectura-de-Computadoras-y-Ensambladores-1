@@ -1,0 +1,19 @@
+[project]
+name = "ejemplos-python-778"
+version = "0.1.0"
+requires-python = ">=3.13,<3.14"
+dependencies = []
+
+[project.optional-dependencies]
+hardware = [
+    "adafruit-circuitpython-ads1x15==3.0.5",
+    "adafruit-circuitpython-dht==4.0.12",
+    "rpi-gpio==0.7.1",
+    "rpi-lcd==0.0.3",
+    "smbus==1.1.post2",
+]
+mqtt = ["paho-mqtt==2.1.0"]
+mongodb = ["pymongo[srv]==3.12.0", "python-dotenv==1.2.2"]
+
+[tool.uv]
+package = false
