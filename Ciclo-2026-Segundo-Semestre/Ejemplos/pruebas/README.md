@@ -1,4 +1,17 @@
-# Pruebas de Python
+# Pruebas de Python y ARM64
+
+## Ensamblado, ejecución y depuración ARM64
+
+Instala las herramientas de la [guía ARM64](../ARM64/README.md). Desde esta carpeta:
+
+```bash
+python3.13 -m unittest -v test_arm64
+PRUEBAS_GDB=1 python3.13 -m unittest -v test_arm64
+```
+
+La primera orden ejecuta QEMU y omite únicamente la prueba TCP de GDB. La segunda activa también esa sesión real de depuración. Las pruebas crean archivos y binarios temporales fuera del repositorio y los eliminan al terminar. Verifican EOF, menú, buffers, formato, límites numéricos, pila y registros preservados.
+
+La ejecución nativa en Raspberry Pi y los perfiles visuales de VS Code siguen pendientes. Consulta la [validación vigente](../VALIDACION.md).
 
 ## Pruebas de lógica sin hardware
 

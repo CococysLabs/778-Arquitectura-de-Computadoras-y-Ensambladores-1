@@ -1,0 +1,32 @@
+# Compilación nativa en Raspberry Pi OS de 64 bits.
+AS = as
+LD = ld
+RUN ?=
+BUILD ?= build
+SRC ?= src/00_hello_world.s
+PROGRAMS := src/00_hello_world.s src/01_if.s src/02_while.s src/03_read_file.s src/04_process_buffer.s src/07_sum_and_subtract.s src/09_read_input.s src/10_select_menu.s
+ifeq ($(filter $(SRC),$(PROGRAMS)),)
+$(error SRC debe ser un programa ejecutable del índice; las rutinas auxiliares no tienen _start)
+endif
+PROGRAM := $(patsubst %.s,%,$(SRC))
+OBJ := $(BUILD)/$(PROGRAM).o
+TARGET := $(BUILD)/$(PROGRAM)
+DEP := $(OBJ:.o=.d)
+ASFLAGS ?= -g -I $(dir $(SRC)) -I .
+LDFLAGS ?=
+
+.PHONY: all run clean info
+all: $(TARGET)
+$(OBJ): $(SRC)
+	@mkdir -p "$(@D)"
+	$(AS) $(ASFLAGS) --MD "$(DEP)" -o "$@" "$<"
+$(TARGET): $(OBJ)
+	$(LD) $(LDFLAGS) -o "$@" "$<"
+run: $(TARGET)
+	$(RUN) "$(TARGET)"
+
+clean:
+	rm -rf -- "$(BUILD)"
+info:
+	@echo "make -f Makefile.arm64 SRC=src/00_hello_world.s run"
+-include $(DEP)

@@ -8,7 +8,7 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[1]
 REPO = ROOT.parents[1]
 PREFIX = ROOT.relative_to(REPO).as_posix() + "/"
-IGNORED_PARTS = {".venv", "__pycache__"}
+IGNORED_PARTS = {".venv", "__pycache__", "build"}
 files = sorted(path for path in ROOT.rglob("*")
                if path.is_file() and not IGNORED_PARTS.intersection(path.parts))
 errors = []
@@ -55,8 +55,10 @@ for path in files:
                 if anchor not in slugs:
                     errors.append(f"Ancla no encontrada en {relative}: {target}")
 
+base = subprocess.check_output(
+    ["git", "merge-base", "main", "HEAD"], cwd=REPO).decode().strip()
 changed = subprocess.check_output(
-    ["git", "diff", "--name-only", "HEAD", "-z"], cwd=REPO).decode().split("\0")
+    ["git", "diff", "--name-only", base, "-z"], cwd=REPO).decode().split("\0")
 untracked = subprocess.check_output(
     ["git", "ls-files", "--others", "--exclude-standard", "-z"],
     cwd=REPO).decode().split("\0")
@@ -64,10 +66,16 @@ paths = sorted(set(filter(None, changed + untracked)))
 for path in paths:
     if not path.startswith(PREFIX):
         errors.append(f"Cambio fuera de la ruta autorizada: {path}")
-    if any(part in {"ARM64", "11_proyecto"} for part in Path(path).parts):
-        errors.append(f"Contenido fuera de la etapa Python: {path}")
-    if any(part in {".venv", "__pycache__"} for part in Path(path).parts):
+    parts = Path(path).parts
+    if "11_proyecto" in parts or re.search(r"(?:parcial|tarea|practica|shell)", Path(path).name, re.I):
+        errors.append(f"Material excluido de la migración: {path}")
+    if any(part in {".venv", "__pycache__", "build"} for part in parts):
         errors.append(f"Archivo generado sin excluir: {path}")
+    if Path(path).suffix.lower() in {".png", ".jpg", ".jpeg", ".gif", ".svg", ".o", ".so", ".pyc", ".d"}:
+        errors.append(f"Imagen reservada o archivo generado incluido: {path}")
+    candidate = REPO / path
+    if candidate.is_file() and candidate.read_bytes().startswith(b"\x7fELF"):
+        errors.append(f"Ejecutable ELF incluido: {path}")
 
 print(f"Fuentes Python compiladas en memoria: {python_count}")
 print(f"Enlaces relativos comprobados: {links}")
