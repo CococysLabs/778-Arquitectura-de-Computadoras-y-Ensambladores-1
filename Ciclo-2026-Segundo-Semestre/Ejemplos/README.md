@@ -1,27 +1,32 @@
 # Ejemplos del curso 778 — Segundo semestre de 2026
 
-Recursos de clase para estudiar interfaces de entrada/salida con Python y programación en ensamblador AArch64. Cada bloque documenta requisitos, ejecución y resultados esperados.
+Ejemplos publicados organizados por su correspondencia con `5_Diseño_Curricular.xlsx`, hoja **Diseño**, celda **C5: Segundo Semestre 2026**, rango **B9:H68**. Se utiliza el número de semana de la columna H; no la etiqueta inconsistente de la hoja Resumen ni los meses de otras planificaciones.
 
-| Bloque | Contenido | Entorno |
+| Semana | Contenido | Correspondencia en Diseño |
 | --- | --- | --- |
-| [Python](Python/README.md) | GPIO, pulsadores, PWM, temporización, DHT11, LCD, HC-SR04, ADC, MQTT y MongoDB | Python 3.13; los circuitos requieren Pi 3/4 y los ejemplos de comunicación requieren servicios. |
-| [ARM64](ARM64/README.md) | Mensajes, bifurcaciones, bucles, archivos, conversiones, pila, entrada estándar y menú | GNU assembler y Linux AArch64 nativo o QEMU. |
-| [Pruebas](pruebas/README.md) | Verificaciones de lógica, servicios, ensamblado, ejecución y depuración | Herramientas indicadas en cada bloque. |
+| [03: Entorno ARM64](Semana_03_Entorno_ARM64/README.md) | Hello World, toolchain GNU, QEMU, Make y GDB. | Filas 15–20 |
+| [06: Control de flujo y funciones](Semana_06_Control_Flujo_y_Funciones/README.md) | If, while, menú y conversiones como rutinas reutilizables. | Filas 33–38 |
+| [07: Funciones y pila](Semana_07_Funciones_y_Pila/README.md) | Suma/resta, vector en pila y preservación de registros. | Filas 39–42 |
+| [08: Linux y archivos](Semana_08_Linux_y_Archivos/README.md) | Archivos, buffers, entrada estándar y lector numérico. | Filas 45–50 |
+| [10: GPIO y periféricos](Semana_10_GPIO_y_Perifericos/README.md) | LED, pulsadores, PWM, DHT11, LCD, HC-SR04 y ADC mediante Python. | Filas 57–62; apoyo práctico de E/S |
 
-## Primeros pasos
+[Recursos complementarios](Recursos_Complementarios/README.md): temporización con hilos/Timer, MQTT y MongoDB. Se conservan sin atribuirles una correspondencia semanal que el temario no establece. No se crean semanas vacías ni ejemplos nuevos para cubrir temas ausentes.
 
-1. Abre el README del lenguaje que utilizarás.
-2. Instala solo sus requisitos y respeta el directorio de ejecución indicado.
-3. Comprueba conexiones y límites eléctricos antes de alimentar un circuito.
-4. Contrasta la salida con el resultado esperado y distingue datos sintéticos de mediciones.
-5. Revisa los estados de comprobación en [VALIDACION.md](VALIDACION.md).
+## Preparación y ejecución
 
-Los nombres y la numeración son convenciones propuestas para este conjunto, sin atribuirles obligatoriedad institucional. Los identificadores no representan semanas del semestre.
+Abre **esta carpeta `Ejemplos/`** en la terminal y en VS Code. Todos los comandos de ejecución parten de esta raíz.
 
-## Estado y procedencia
+- [ARM64](documentacion/arm64.md): requisitos, comandos, contratos de auxiliares, resultados y depuración. Los dos Makefiles son comunes; `SRC` selecciona el programa semanal y `build/` conserva su ruta.
+- [Python](documentacion/python.md): índice de los diez grupos. Usa una sola configuración `pyproject.toml`, `uv.lock`, `.python-version` y `.venv/`; instala solo los extras necesarios.
+- [Entorno Python](documentacion/preparar_entorno.md) y [conexiones GPIO](documentacion/gpio_y_sensores.md): requisitos y límites eléctricos.
+- [Pruebas](pruebas/README.md) y [validación](VALIDACION.md): comandos reproducibles y alcance real de cada comprobación.
 
-Las pruebas disponibles de lógica, servicios locales y ejecución AArch64 se registran con su alcance real. Las pruebas físicas en Raspberry Pi y la calibración de periféricos siguen pendientes; no se presentan como verificadas.
+La rutina [io.s](compartidos/ARM64/io.s) y los [datos sintéticos](datos/lecturas.csv) tienen una sola copia compartida. Las otras rutinas se conservan en la semana donde se estudian y los Makefiles resuelven sus inclusiones.
 
-Consulta [atribuciones y permisos](ATRIBUCIONES.md), el [inventario de Python](INVENTARIO_PYTHON.md) y la [documentación de ARM64](ARM64/README.md). El inventario y registro Python conservan el alcance histórico de su primera etapa; la validación actual del conjunto está en [VALIDACION.md](VALIDACION.md).
+## Conservación y procedencia
 
-Se excluyen soluciones de exámenes, tareas evaluadas, prácticas resueltas, proyecto completo, shell reservado e imágenes sin atribución comprobada.
+Se conservan 24 programas Python, dos módulos auxiliares y ocho programas ARM64 con cuatro archivos de rutinas auxiliares. Los identificadores originales de los ejemplos no representan semanas.
+
+Consulta las [atribuciones](ATRIBUCIONES.md), el [inventario histórico Python](INVENTARIO_PYTHON.md) y su [registro histórico](REGISTRO_PYTHON.md). Sus resultados previos no sustituyen las verificaciones de esta reorganización, documentadas en VALIDACION.
+
+La ejecución física en Raspberry Pi, sensores y calibración sigue pendiente. No se incluyen soluciones de evaluación ni proyectos completos.

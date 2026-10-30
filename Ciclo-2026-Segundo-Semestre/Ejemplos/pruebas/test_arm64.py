@@ -9,7 +9,25 @@ import tempfile
 import time
 import unittest
 
-ARM = Path(__file__).resolve().parents[1] / "ARM64"
+ROOT = Path(__file__).resolve().parents[1]
+SOURCES = {
+    '00_hello_world': 'Semana_03_Entorno_ARM64/ARM64/00_hello_world.s',
+    '01_if': 'Semana_06_Control_Flujo_y_Funciones/ARM64/01_if.s',
+    '02_while': 'Semana_06_Control_Flujo_y_Funciones/ARM64/02_while.s',
+    '05_atoi': 'Semana_06_Control_Flujo_y_Funciones/ARM64/05_atoi.s',
+    '06_itoa': 'Semana_06_Control_Flujo_y_Funciones/ARM64/06_itoa.s',
+    '10_select_menu': 'Semana_06_Control_Flujo_y_Funciones/ARM64/10_select_menu.s',
+    '07_sum_and_subtract': 'Semana_07_Funciones_y_Pila/ARM64/07_sum_and_subtract.s',
+    '03_read_file': 'Semana_08_Linux_y_Archivos/ARM64/03_read_file.s',
+    '04_process_buffer': 'Semana_08_Linux_y_Archivos/ARM64/04_process_buffer.s',
+    '08_read_numbers': 'Semana_08_Linux_y_Archivos/ARM64/08_read_numbers.s',
+    '09_read_input': 'Semana_08_Linux_y_Archivos/ARM64/09_read_input.s',
+}
+INCLUDE_DIRS = (
+    ROOT / 'Semana_06_Control_Flujo_y_Funciones/ARM64',
+    ROOT / 'Semana_08_Linux_y_Archivos/ARM64',
+    ROOT / 'compartidos/ARM64',
+)
 PROGRAMS = ("00_hello_world", "01_if", "02_while", "03_read_file",
             "04_process_buffer", "07_sum_and_subtract", "09_read_input",
             "10_select_menu")
@@ -26,8 +44,8 @@ class ARMTests(unittest.TestCase):
         cls.build = cls.work / "build"
         for program in PROGRAMS:
             subprocess.run(
-                ["make", "-f", "Makefile.qemu", f"SRC=src/{program}.s",
-                 f"BUILD={cls.build}"], cwd=ARM, check=True, capture_output=True)
+                ["make", "-f", "Makefile.qemu", f"SRC={SOURCES[program]}",
+                 f"BUILD={cls.build}"], cwd=ROOT, check=True, capture_output=True)
 
     @classmethod
     def tearDownClass(cls):
@@ -36,27 +54,28 @@ class ARMTests(unittest.TestCase):
     def execute(self, program, data=b"", fixture=None, fixture_directory=False):
         with tempfile.TemporaryDirectory(prefix="curso778-datos-") as directory:
             cwd = Path(directory)
-            (cwd / "src").mkdir()
-            filename = cwd / "src/lecturas.csv"
+            (cwd / "datos").mkdir()
+            filename = cwd / "datos/lecturas.csv"
             if fixture_directory:
                 filename.mkdir()
             elif fixture is not None:
                 filename.write_bytes(fixture)
             return subprocess.run(
-                ["qemu-aarch64", str(self.build / "src" / program)],
+                ["qemu-aarch64", str(self.build / Path(SOURCES[program]).with_suffix(""))],
                 cwd=cwd, input=data, capture_output=True, timeout=5)
 
     def harness(self, source, fixture=None):
         with tempfile.TemporaryDirectory(prefix="curso778-rutina-") as directory:
             cwd = Path(directory)
-            (cwd / "src").mkdir()
+            (cwd / "datos").mkdir()
             if fixture is not None:
-                (cwd / "src/lecturas.csv").write_bytes(fixture)
+                (cwd / "datos/lecturas.csv").write_bytes(fixture)
             asm = cwd / "check.s"
             obj = cwd / "check.o"
             exe = cwd / "check"
             asm.write_text(source)
-            subprocess.run(["aarch64-linux-gnu-as", "-g", "-I", str(ARM / "src"),
+            subprocess.run(["aarch64-linux-gnu-as", "-g", *[flag for directory in INCLUDE_DIRS
+                              for flag in ("-I", str(directory))],
                             "-o", str(obj), str(asm)],
                            check=True, capture_output=True)
             subprocess.run(["aarch64-linux-gnu-ld", "-o", str(exe), str(obj)],
@@ -109,7 +128,7 @@ svc #0
                 self.assertEqual(result.stdout, output)
 
     def test_if_greater_branch_with_test_constant(self):
-        source = (ARM / "src/01_if.s").read_text()
+        source = (ROOT / SOURCES["01_if"]).read_text()
         self.assertIn("mov x0, #5", source)
         result = self.harness(source.replace("mov x0, #5", "mov x0, #11"))
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -236,25 +255,47 @@ svc #0
     def test_write_failure_is_reported(self):
         with open("/dev/full", "wb") as full:
             result = subprocess.run(
-                ["qemu-aarch64", str(self.build / "src/00_hello_world")],
+                ["qemu-aarch64", str(self.build / Path(SOURCES["00_hello_world"]).with_suffix(""))],
                 stdout=full, stderr=subprocess.PIPE, timeout=5)
         self.assertEqual(result.returncode, 1)
         self.assertIn(b"Error", result.stderr)
 
     def test_makefiles_reject_auxiliaries_and_track_includes(self):
         result = subprocess.run(
-            ["make", "-f", "Makefile.qemu", "SRC=src/05_atoi.s"],
-            cwd=ARM, capture_output=True)
+            ["make", "-f", "Makefile.qemu", f"SRC={SOURCES['05_atoi']}"],
+            cwd=ROOT, capture_output=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn(b"auxiliares", result.stderr)
-        dependencies = (self.build / "src/07_sum_and_subtract.d").read_text()
+        dependencies = (self.build / Path(SOURCES["07_sum_and_subtract"]).with_suffix(".d")).read_text()
         for filename in ("io.s", "05_atoi.s", "06_itoa.s", "08_read_numbers.s"):
             self.assertIn(filename, dependencies)
         native = subprocess.run(
             ["make", "-f", "Makefile.arm64", "-n", f"BUILD={self.work / 'native'}"],
-            cwd=ARM, capture_output=True, text=True)
+            cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(native.returncode, 0, native.stderr)
         self.assertIn("as -g", native.stdout)
+
+    def test_rebuild_when_shared_or_weekly_routine_changes(self):
+        with tempfile.TemporaryDirectory(prefix="curso778-rebuild-") as directory:
+            cwd = Path(directory)
+            for source in (*SOURCES.values(), "compartidos/ARM64/io.s", "Makefile.qemu"):
+                destination = cwd / source
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(ROOT / source, destination)
+            command = ["make", "-f", "Makefile.qemu",
+                       f"SRC={SOURCES['07_sum_and_subtract']}"]
+            subprocess.run(command, cwd=cwd, check=True, capture_output=True)
+            obj = cwd / "build" / Path(SOURCES["07_sum_and_subtract"]).with_suffix(".o")
+            for source in ("compartidos/ARM64/io.s", SOURCES["05_atoi"],
+                           SOURCES["06_itoa"], SOURCES["08_read_numbers"]):
+                with self.subTest(source=source):
+                    self.assertEqual(subprocess.run(command + ["-q"], cwd=cwd).returncode, 0)
+                    changed = obj.stat().st_mtime_ns + 1
+                    os.utime(cwd / source, ns=(changed, changed))
+                    self.assertEqual(subprocess.run(command + ["-q"], cwd=cwd).returncode, 1)
+                    result = subprocess.run(command, cwd=cwd, check=True, capture_output=True)
+                    self.assertIn(b"aarch64-linux-gnu-as", result.stdout)
+                    self.assertEqual(subprocess.run(command + ["-q"], cwd=cwd).returncode, 0)
 
     @unittest.skipUnless(os.getenv("PRUEBAS_GDB") == "1" and shutil.which("gdb-multiarch"),
                          "Activar PRUEBAS_GDB=1 para sesión TCP real con GDB.")
@@ -262,7 +303,7 @@ svc #0
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
-        executable = self.build / "src/02_while"
+        executable = self.build / Path(SOURCES["02_while"]).with_suffix("")
         emulator = subprocess.Popen(
             ["qemu-aarch64", "-g", str(port), str(executable)],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)

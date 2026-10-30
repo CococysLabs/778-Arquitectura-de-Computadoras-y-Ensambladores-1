@@ -1,10 +1,60 @@
-# Validación de los ejemplos Python y ARM64
+# Validación de la organización semanal — 30 de octubre de 2026
+
+Base publicada: `cd55239b99654e4bd8dff2b40cab67d632a00a92` de `main`.
+Fuente curricular: `5_Diseño_Curricular.xlsx`, hoja `Diseño`, `C5`: «Segundo Semestre 2026», rango `B9:H68`. La hoja `Resumen` no se utilizó para clasificar.
+
+## Resultados de esta reorganización
+
+| Comprobación | Resultado y alcance |
+| --- | --- |
+| Suite completa | **39 pruebas aprobadas, cero fallos y cero omisiones**: 19 de lógica Python, 16 ARM64 y 4 con servicios reales. |
+| Conservación de programas | Los 26 archivos educativos Python permanecen idénticos byte a byte. Las 12 fuentes ARM64 conservan su código; solo cambió `src/lecturas.csv` por `datos/lecturas.csv` en tres lectores. Comparación contra la base publicada. |
+| Datos y configuración | `lecturas.csv`, `pyproject.toml`, `uv.lock`, `.python-version` y los cuatro JSON de VS Code conservan su contenido. Se reubicaron para usar una sola raíz. |
+| Dependencias Python | `uv sync --locked --extra mqtt --extra mongodb` correcto; `uv pip check --python .venv/bin/python` comprueba los cuatro paquetes instalados sin incompatibilidades. No se cambiaron versiones. |
+| ARM64 con QEMU | Los ocho ejecutables se ensamblan, enlazan y ejecutan; pasan casos de EOF, entrada inválida, buffers, límites y errores de E/S. |
+| Pila y auxiliares | Pasan las comprobaciones existentes de SP, x19–x29, conversiones, capacidad y desbordamientos. |
+| Makefiles | Rechazan auxiliares como ejecutables, rastrean inclusiones entre semanas y reconstruyen al cambiar cualquiera de los cuatro auxiliares. El Makefile nativo se comprueba mediante dry-run. |
+| GDB CLI | Sesión real con QEMU, breakpoint en `finWhile`, x0=100 y cierre correcto. |
+| MQTT local | Tres pruebas reales con Mosquitto 2.0: conexión, publicación/suscripción y MQTT 5 con mensaje de otro cliente. |
+| MongoDB local | Una prueba real con MongoDB 8.0: conexión, inserción, consulta y simulación. Base aleatoria con datos sintéticos eliminada al terminar. |
+| Documentación y VS Code | Rutas de los 18 comandos `uv run` documentados existentes; JSON y rutas base de los perfiles comprobados. Interfaz gráfica no verificada. |
+| Sintaxis, enlaces y alcance | Verificador de repositorio y `git diff --check` correctos; cambios limitados a `Ciclo-2026-Segundo-Semestre/Ejemplos/`. Sin entornos, objetos ni binarios en el aporte. |
+
+Entorno: Linux x86-64, CPython 3.13.17, GNU Binutils 2.42, QEMU 8.2.2 y GDB 15.1. PyMongo 3.12.0 mantiene su advertencia de obsolescencia ya documentada; las pruebas pasan sin ocultarla.
+
+Las comprobaciones iniciales dentro del aislamiento encontraron dependencias ausentes y una restricción de sockets. Se instalaron los extras bloqueados y se repitió la suite completa con acceso a los servicios locales y GDB. Los dos contenedores de prueba se detuvieron al finalizar.
+
+## Reproducir
+
+Desde la raíz `Ejemplos/`, prepara los servicios desechables como indica [pruebas/README.md](pruebas/README.md) y ejecuta:
+
+```bash
+uv sync --locked --extra mqtt --extra mongodb
+PRUEBAS_GDB=1 PRUEBAS_SERVICIOS=1 .venv/bin/python -m unittest discover -s pruebas -v
+python3.13 pruebas/verificar_repositorio.py
+uv pip check --python .venv/bin/python
+git diff --check
+```
+
+Los tests usan datos temporales y no sobrescriben `datos/lecturas.csv`. Para omitir integraciones locales no actives `PRUEBAS_SERVICIOS`; las omisiones no equivalen a pruebas aprobadas.
+
+## Límites de esta comprobación
+
+No se verificaron Raspberry Pi física, periféricos, calibración del servo ni ejecución ARM64 nativa. Tampoco la interfaz F5/Remote-SSH/StackScope, Atlas, DNS SRV, TLS o autenticación externa. Los dobles GPIO y los datos sintéticos no acreditan mediciones físicas.
+
+La organización contiene solo semanas con correspondencia demostrable: 03, 06, 07, 08 y 10. Hilos/Timer, MQTT y MongoDB quedan en recursos complementarios; no se presentan como integración C+AArch64 de semana 11.
+
+---
+
+Los resultados siguientes pertenecen a la incorporación original. Se conservan como historial, con rutas actualizadas; la validación vigente es la sección superior.
+
+# Registro histórico: incorporación original
 
 Referencia del curso: `0d0fe4b1729b3a429f5343e897a7f24a7b080114`.
 Origen: `2efa6ebe56a2d74e59c16bf6cf2bbe1050c8ca96`.
 Fecha de comprobación: 27 de octubre de 2026.
 
-## Resultados comprobados
+## Resultados de la incorporación del 27 de octubre
 
 | Comprobación | Estado | Evidencia y alcance |
 | --- | --- | --- |
@@ -36,13 +86,13 @@ Python conserva 24 programas y dos módulos auxiliares en diez temas. ARM64 inco
 
 | Original ARM64 | Destino o decisión |
 | --- | --- |
-| `00_hello_world.s`, `01_if.s`, `02_while.s` | Mismos nombres en `ARM64/src/`. |
+| `00_hello_world.s`, `01_if.s`, `02_while.s` | Mismos nombres, ahora en las semanas 03 y 06. |
 | `03_read_file.s`, `04_process_buffer.s` | Lectura por bloques y errores; mismos nombres. |
 | `05_atoi.s`, `06_itoa.s` | Conversiones acotadas; contratos en README. |
 | `07_rutina.s` | `07_sum_and_subtract.s`. |
 | `08_utils.s` | `08_read_numbers.s`. |
 | `09_read_input.s`, `10_select_menu.s`, `lecturas.csv` | Mismos nombres; EOF y menú corregidos. |
-| Makefiles y cuatro configuraciones VS Code | Adaptados o conservados bajo `ARM64/`. |
+| Makefiles y cuatro configuraciones VS Code | Ahora compartidos en la raíz `Ejemplos/`. |
 | `11_practica.s`, parciales 12–15, tarea 16, shell 17–19 | Excluidos. |
 | `io.s`, `pruebas/test_arm64.py` | Nuevos auxiliares y pruebas. |
 
@@ -50,16 +100,16 @@ No hay cambios fuera de `Ciclo-2026-Segundo-Semestre/Ejemplos/`. Los archivos hi
 
 ## Reproducir verificaciones
 
-Desde `pruebas/`:
+Desde la raíz `Ejemplos/`:
 
 ```bash
-../Python/.venv/bin/python -m unittest -v test_python
-python3.13 -m unittest -v test_arm64
-PRUEBAS_GDB=1 python3.13 -m unittest -v test_arm64
-python3.13 verificar_repositorio.py
+.venv/bin/python -m unittest discover -s pruebas -p test_python.py -v
+python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
+PRUEBAS_GDB=1 python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
+python3.13 pruebas/verificar_repositorio.py
 ```
 
-Las pruebas de servicios requieren activación y contenedores locales según [pruebas/README.md](pruebas/README.md). Las pruebas ARM64 usan directorios temporales y no sobrescriben `ARM64/src/lecturas.csv`.
+Las pruebas de servicios requieren activación y contenedores locales según [pruebas/README.md](pruebas/README.md). Las pruebas ARM64 usan directorios temporales y no sobrescriben `datos/lecturas.csv`.
 
 ## Revisión institucional
 

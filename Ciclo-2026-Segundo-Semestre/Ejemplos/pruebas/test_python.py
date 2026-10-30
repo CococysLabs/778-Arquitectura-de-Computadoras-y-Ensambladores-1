@@ -10,7 +10,7 @@ import types
 import unittest
 from unittest.mock import Mock, patch
 
-PYTHON = Path(__file__).resolve().parents[1] / "Python"
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class Clock:
@@ -40,7 +40,7 @@ def gpio_module():
 
 def run_example(relative, modules):
     with patch.dict(sys.modules, modules), contextlib.redirect_stdout(io.StringIO()):
-        return runpy.run_path(str(PYTHON / relative), run_name="__main__")
+        return runpy.run_path(str(ROOT / relative), run_name="__main__")
 
 
 class GPIOTests(unittest.TestCase):
@@ -52,7 +52,7 @@ class GPIOTests(unittest.TestCase):
         )
         rpi = types.ModuleType("RPi")
         rpi.GPIO = gpio
-        run_example("01_input_button/" + script,
+        run_example("Semana_10_GPIO_y_Perifericos/Python/01_input_button/" + script,
                     {"time": clock.module, "RPi": rpi, "RPi.GPIO": gpio})
         gpio.cleanup.assert_called_once()
         return [call.args[1] for call in gpio.output.call_args_list]
@@ -78,7 +78,7 @@ class GPIOTests(unittest.TestCase):
         rpi = types.ModuleType("RPi")
         rpi.GPIO = gpio
         with self.assertRaisesRegex(RuntimeError, "detector"):
-            run_example("01_input_button/button_callback.py",
+            run_example("Semana_10_GPIO_y_Perifericos/Python/01_input_button/button_callback.py",
                         {"RPi": rpi, "RPi.GPIO": gpio})
         gpio.cleanup.assert_called_once()
         gpio.remove_event_detect.assert_not_called()
@@ -105,7 +105,7 @@ class GPIOTests(unittest.TestCase):
         fake_time.sleep = interrupt
         rpi = types.ModuleType("RPi")
         rpi.GPIO = gpio
-        run_example("03_timer_task/timer_rearm.py",
+        run_example("Recursos_Complementarios/Python/03_timer_task/timer_rearm.py",
                     {"RPi": rpi, "RPi.GPIO": gpio, "time": fake_time,
                      "threading": fake_threading})
         self.assertEqual(len(timers), 2)
@@ -133,7 +133,7 @@ class SensorTests(unittest.TestCase):
         board.D20 = 20
         dht = types.ModuleType("adafruit_dht")
         dht.DHT11 = lambda pin: sensor
-        run_example("04_dht11/dht11_periodic.py",
+        run_example("Semana_10_GPIO_y_Perifericos/Python/04_dht11/dht11_periodic.py",
                     {"time": clock.module, "board": board, "adafruit_dht": dht})
         self.assertEqual(len(attempts), 3)
         self.assertTrue(all(b - a >= 2 for a, b in zip(attempts, attempts[1:])))
@@ -147,7 +147,7 @@ class SensorTests(unittest.TestCase):
         output = io.StringIO()
         with patch.dict(sys.modules, {"smbus": smbus, "time": Clock(1).module}):
             with contextlib.redirect_stdout(output):
-                runpy.run_path(str(PYTHON / "08_adc/pcf8591.py"), run_name="__main__")
+                runpy.run_path(str(ROOT / "Semana_10_GPIO_y_Perifericos/Python/08_adc/pcf8591.py"), run_name="__main__")
         self.assertIn("42", output.getvalue())
         self.assertNotIn("128", output.getvalue())
         self.assertEqual(bus.read_byte.call_count, 2)
@@ -159,7 +159,7 @@ class SensorTests(unittest.TestCase):
         smbus = types.ModuleType("smbus")
         smbus.SMBus = lambda number: bus
         with self.assertRaises(OSError):
-            run_example("08_adc/pcf8591.py", {"smbus": smbus})
+            run_example("Semana_10_GPIO_y_Perifericos/Python/08_adc/pcf8591.py", {"smbus": smbus})
         bus.close.assert_called_once()
 
     def test_ultrasonic_echo_timeouts_and_known_pulse(self):
@@ -181,7 +181,7 @@ class SensorTests(unittest.TestCase):
                 rpi.GPIO = gpio
                 with patch.dict(sys.modules, {"time": clock, "RPi": rpi,
                                              "RPi.GPIO": gpio}):
-                    namespace = runpy.run_path(str(PYTHON / "07_hc_sr04/hcsr04.py"))
+                    namespace = runpy.run_path(str(ROOT / "Semana_10_GPIO_y_Perifericos/Python/07_hc_sr04/hcsr04.py"))
                     sensor = namespace["HCSR04"](23, 24)
                     result = sensor.read()
                     sensor.cleanup()
@@ -195,7 +195,7 @@ class SensorTests(unittest.TestCase):
 class ServiceTests(unittest.TestCase):
     def test_mqtt_callbacks_replace_invalid_utf8(self):
         for script in ("subscribe.py", "sub_pub.py"):
-            namespace = runpy.run_path(str(PYTHON / "09_mqtt" / script))
+            namespace = runpy.run_path(str(ROOT / "Recursos_Complementarios/Python/09_mqtt" / script))
             output = io.StringIO()
             with contextlib.redirect_stdout(output):
                 namespace["on_message"](None, None, types.SimpleNamespace(payload=b"\xff"))
@@ -204,7 +204,7 @@ class ServiceTests(unittest.TestCase):
     def test_mqtt_rejects_wildcard_before_connecting(self):
         import os
         for script in ("publish.py", "subscribe.py", "sub_pub.py"):
-            namespace = runpy.run_path(str(PYTHON / "09_mqtt" / script))
+            namespace = runpy.run_path(str(ROOT / "Recursos_Complementarios/Python/09_mqtt" / script))
             with patch.dict(os.environ, {"MQTT_TOPIC": "demo/#"}):
                 with self.assertRaisesRegex(SystemExit, "sin comodines"):
                     namespace["main"]()
@@ -212,9 +212,9 @@ class ServiceTests(unittest.TestCase):
     def test_mongodb_validates_uri_and_names_without_connecting(self):
         import os
         with patch.dict(os.environ, {}, clear=True):
-            namespace = runpy.run_path(str(PYTHON / "10_mongodb/config.py"))
+            namespace = runpy.run_path(str(ROOT / "Recursos_Complementarios/Python/10_mongodb/config.py"))
             with patch("dotenv.load_dotenv", return_value=False):
-                namespace = runpy.run_path(str(PYTHON / "10_mongodb/config.py"))
+                namespace = runpy.run_path(str(ROOT / "Recursos_Complementarios/Python/10_mongodb/config.py"))
                 with self.assertRaisesRegex(ValueError, "MONGODB_URI"):
                     namespace["create_client"]()
                 client = Mock()
@@ -233,7 +233,7 @@ class ServiceTests(unittest.TestCase):
         config.create_client = lambda: client
         with patch.dict(sys.modules, {"config": config}):
             with self.assertRaisesRegex(SystemExit, "No se pudo conectar"):
-                run_example("10_mongodb/connect.py", {})
+                run_example("Recursos_Complementarios/Python/10_mongodb/connect.py", {})
         client.__exit__.assert_called_once()
 
     def test_mongodb_insert_keeps_synthetic_schema_and_closes(self):
@@ -246,7 +246,7 @@ class ServiceTests(unittest.TestCase):
         config.create_client = lambda: client
         config.get_collection = lambda selected: collection
         with patch.dict(sys.modules, {"config": config}):
-            run_example("10_mongodb/insert.py", {})
+            run_example("Recursos_Complementarios/Python/10_mongodb/insert.py", {})
         docs = collection.insert_many.call_args.args[0]
         self.assertEqual(len(docs), 4)
         self.assertTrue(all("sensor" in doc and "Asensor" not in doc for doc in docs))
@@ -262,7 +262,7 @@ class ResourceTests(unittest.TestCase):
                 driver = types.ModuleType("rpi_lcd")
                 driver.LCD = Mock(return_value=lcd)
                 with self.assertRaisesRegex(OSError, "bus interrumpido"):
-                    run_example("05_lcd_i2c/" + script,
+                    run_example("Semana_10_GPIO_y_Perifericos/Python/05_lcd_i2c/" + script,
                                 {"rpi_lcd": driver, "time": Clock(0.1).module})
                 lcd.bus.close.assert_called_once()
                 self.assertEqual(driver.LCD.call_args.args, (0x27, 1, 16, 2, True))
@@ -276,7 +276,7 @@ class ResourceTests(unittest.TestCase):
         ads.AnalogIn = Mock()
         ads.ads1x15 = types.SimpleNamespace(Pin=types.SimpleNamespace(A3=3))
         with self.assertRaisesRegex(OSError, "dispositivo ausente"):
-            run_example("08_adc/ads1115.py", {"board": board, "adafruit_ads1x15": ads})
+            run_example("Semana_10_GPIO_y_Perifericos/Python/08_adc/ads1115.py", {"board": board, "adafruit_ads1x15": ads})
         bus.deinit.assert_called_once()
 
     def test_callback_does_not_touch_gpio_after_cleanup(self):
@@ -284,7 +284,7 @@ class ResourceTests(unittest.TestCase):
         gpio = gpio_module()
         rpi = types.ModuleType("RPi")
         rpi.GPIO = gpio
-        namespace = run_example("01_input_button/button_callback.py",
+        namespace = run_example("Semana_10_GPIO_y_Perifericos/Python/01_input_button/button_callback.py",
                                 {"RPi": rpi, "RPi.GPIO": gpio, "time": clock.module})
         gpio.remove_event_detect.assert_called_once_with(17)
         namespace["on_button"](17)
@@ -301,7 +301,7 @@ class ResourceTests(unittest.TestCase):
         clock.sleep = interrupt
         rpi = types.ModuleType("RPi")
         rpi.GPIO = gpio
-        namespace = run_example("03_timer_task/heartbeat_thread.py",
+        namespace = run_example("Recursos_Complementarios/Python/03_timer_task/heartbeat_thread.py",
                                 {"RPi": rpi, "RPi.GPIO": gpio, "time": clock})
         self.assertFalse(namespace["thread"].is_alive())
         gpio.cleanup.assert_called_once()
@@ -312,7 +312,7 @@ class ResourceTests(unittest.TestCase):
             with self.subTest(script=script):
                 client = Mock()
                 client.connect.side_effect = OSError("conexión rechazada")
-                namespace = runpy.run_path(str(PYTHON / "09_mqtt" / script))
+                namespace = runpy.run_path(str(ROOT / "Recursos_Complementarios/Python/09_mqtt" / script))
                 with patch.object(mqtt, "Client", return_value=client):
                     with self.assertRaisesRegex(SystemExit, "MQTT|suscripción"):
                         namespace["main"]()

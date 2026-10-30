@@ -11,7 +11,7 @@ import time
 import unittest
 import uuid
 
-PYTHON = Path(__file__).resolve().parents[1] / "Python"
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def wait_line(process, text, timeout=12):
@@ -31,7 +31,7 @@ def wait_line(process, text, timeout=12):
 @contextlib.contextmanager
 def listening(script, env):
     process = subprocess.Popen(
-        [sys.executable, "-u", str(PYTHON / script)], env=env,
+        [sys.executable, "-u", str(ROOT / script)], env=env,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     try:
         yield process
@@ -59,25 +59,25 @@ class RealServicesTests(unittest.TestCase):
         return env
 
     def run_script(self, script, env):
-        result = subprocess.run([sys.executable, str(PYTHON / script)], env=env,
+        result = subprocess.run([sys.executable, str(ROOT / script)], env=env,
                                 capture_output=True, text=True, timeout=15)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         return result.stdout
 
     def test_real_mqtt_connection(self):
-        self.assertIn("Desconectado", self.run_script("09_mqtt/client.py", self.mqtt_env()))
+        self.assertIn("Desconectado", self.run_script("Recursos_Complementarios/Python/09_mqtt/client.py", self.mqtt_env()))
 
     def test_real_publish_and_subscribe(self):
         env = self.mqtt_env()
-        with listening("09_mqtt/subscribe.py", env) as subscriber:
+        with listening("Recursos_Complementarios/Python/09_mqtt/subscribe.py", env) as subscriber:
             wait_line(subscriber, "Suscripción confirmada")
-            self.run_script("09_mqtt/publish.py", env)
+            self.run_script("Recursos_Complementarios/Python/09_mqtt/publish.py", env)
             self.assertIn("Hola MQTT", wait_line(subscriber, "Mensaje recibido"))
 
     def test_real_mqtt5_no_local_and_peer_message(self):
         from paho.mqtt.publish import single
         env = self.mqtt_env()
-        with listening("09_mqtt/sub_pub.py", env) as process:
+        with listening("Recursos_Complementarios/Python/09_mqtt/sub_pub.py", env) as process:
             wait_line(process, "Conectado y suscrito")
             single(env["MQTT_TOPIC"], "mensaje de otro cliente",
                    hostname="127.0.0.1", port=int(env["MQTT_PORT"]))
@@ -94,14 +94,14 @@ class RealServicesTests(unittest.TestCase):
         with MongoClient(env["MONGODB_URI"], serverSelectionTimeoutMS=5000) as client:
             client.admin.command("ping")
             try:
-                self.assertIn("verificada", self.run_script("10_mongodb/connect.py", env))
-                self.run_script("10_mongodb/insert.py", env)
+                self.assertIn("verificada", self.run_script("Recursos_Complementarios/Python/10_mongodb/connect.py", env))
+                self.run_script("Recursos_Complementarios/Python/10_mongodb/insert.py", env)
                 collection = client[env["MONGODB_DB"]][env["MONGODB_COLLECTION"]]
                 self.assertEqual(collection.count_documents({}), 4)
-                output = self.run_script("10_mongodb/query.py", env)
+                output = self.run_script("Recursos_Complementarios/Python/10_mongodb/query.py", env)
                 self.assertIn("raspi-01", output)
                 self.assertIn("Temperatura en orden descendente", output)
-                with listening("10_mongodb/simulate_sensor.py", env) as process:
+                with listening("Recursos_Complementarios/Python/10_mongodb/simulate_sensor.py", env) as process:
                     wait_line(process, "Lectura sintética insertada")
                 doc = collection.find_one({"sensor": "raspi"})
                 self.assertIsNotNone(doc)

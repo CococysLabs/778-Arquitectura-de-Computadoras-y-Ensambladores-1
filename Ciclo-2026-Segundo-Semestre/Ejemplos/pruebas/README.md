@@ -2,26 +2,26 @@
 
 ## Ensamblado, ejecución y depuración ARM64
 
-Instala las herramientas de la [guía ARM64](../ARM64/README.md). Desde esta carpeta:
+Instala las herramientas de la [guía ARM64](../documentacion/arm64.md). Desde la raíz `Ejemplos/`:
 
 ```bash
-python3.13 -m unittest -v test_arm64
-PRUEBAS_GDB=1 python3.13 -m unittest -v test_arm64
+python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
+PRUEBAS_GDB=1 python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
 ```
 
-La primera orden ejecuta QEMU y omite únicamente la prueba TCP de GDB. La segunda activa también esa sesión real de depuración. Las pruebas crean archivos y binarios temporales fuera del repositorio y los eliminan al terminar. Verifican EOF, menú, buffers, formato, límites numéricos, pila y registros preservados.
+También se comprueba la reconstrucción al cambiar una rutina compartida o de otra semana. La primera orden ejecuta QEMU y omite únicamente la prueba TCP de GDB. La segunda activa también esa sesión real de depuración. Las pruebas crean archivos y binarios temporales fuera del repositorio y los eliminan al terminar. Verifican EOF, menú, buffers, formato, límites numéricos, pila y registros preservados.
 
 La ejecución nativa en Raspberry Pi y los perfiles visuales de VS Code siguen pendientes. Consulta la [validación vigente](../VALIDACION.md).
 
 ## Pruebas de lógica sin hardware
 
-Desde esta carpeta, con los extras de servicios instalados en `Python/.venv`:
+Desde la raíz `Ejemplos/`, con los extras de servicios instalados en `.venv`:
 
 ```bash
-../Python/.venv/bin/python -m unittest -v test_python
+.venv/bin/python -m unittest discover -s pruebas -p test_python.py -v
 ```
 
-Preparación del entorno, desde `Python/`: `uv sync --locked --extra mqtt --extra mongodb`. No se necesita instalar GPIO para estos dobles.
+Preparación del entorno, desde `Ejemplos/`: `uv sync --locked --extra mqtt --extra mongodb`. No se necesita instalar GPIO para estos dobles.
 
 Las pruebas comprueban transiciones de pulsadores, antirrebote, duración, cierre de hilo y temporizador, liberación de LCD/ADC, reintentos DHT, conversión PCF8591, tiempos de espera del eco, payload MQTT inválido y validación/cierre MongoDB. Los dobles utilizan estímulos sintéticos: no constituyen mediciones ni funcionamiento de hardware.
 
@@ -36,10 +36,10 @@ docker run --rm -d --name curso778-mqtt-prueba -p 127.0.0.1:18883:1883 eclipse-m
 docker run --rm -d --name curso778-mongo-prueba -p 127.0.0.1:27078:27017 mongo:8.0 --bind_ip_all
 ```
 
-Espera a que ambos servicios estén listos antes de ejecutar, desde esta carpeta:
+Espera a que ambos servicios estén listos antes de ejecutar, desde la raíz `Ejemplos/`:
 
 ```bash
-PRUEBAS_SERVICIOS=1 ../Python/.venv/bin/python -m unittest -v test_servicios
+PRUEBAS_SERVICIOS=1 .venv/bin/python -m unittest discover -s pruebas -p test_servicios.py -v
 ```
 
 Puedes ajustar los puertos mediante `PRUEBA_MQTT_PORT` y `PRUEBA_MONGO_PORT`. Los hosts de prueba están fijados a localhost. No apuntes estas pruebas a infraestructura institucional o datos reales.
@@ -56,13 +56,21 @@ La opción `--rm` elimina los contenedores al detenerlos; las imágenes descarga
 
 ## Comprobaciones estáticas
 
-Desde esta carpeta:
+Desde la raíz `Ejemplos/`:
 
 ```bash
-python3.13 verificar_repositorio.py
+python3.13 pruebas/verificar_repositorio.py
 ```
 
 Compila en memoria las fuentes de ejemplos y pruebas; comprueba enlaces relativos Markdown, patrones de secretos, archivos excluidos y diferencias de formato. No consulta enlaces externos ni garantiza ausencia total de secretos.
+
+## Suite completa
+
+Con los servicios locales iniciados, desde `Ejemplos/`:
+
+```bash
+PRUEBAS_GDB=1 PRUEBAS_SERVICIOS=1 .venv/bin/python -m unittest discover -s pruebas -v
+```
 
 ## Validación física pendiente
 
