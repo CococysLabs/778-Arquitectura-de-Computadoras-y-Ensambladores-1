@@ -1,6 +1,6 @@
 # Ejemplos — Segundo semestre de 2026
 
-Programas educativos organizados según `5_Diseño_Curricular.xlsx`, hoja `Diseño`. Cada semana incluye archivos, ejecución y resultados esperados.
+Cada semana incluye archivos, ejecución y resultados esperados.
 
 | Semana | Contenido |
 | --- | --- |
