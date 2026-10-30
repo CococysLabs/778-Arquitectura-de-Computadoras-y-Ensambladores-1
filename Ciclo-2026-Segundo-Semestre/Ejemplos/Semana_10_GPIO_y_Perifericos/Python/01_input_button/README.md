@@ -4,8 +4,6 @@
 
 Comparar sondeo, callbacks y clasificación de pulsaciones utilizando una entrada con resistencia pull-up.
 
-Estos programas son ejemplos de clase, no soluciones de evaluaciones.
-
 | Programa | Funcionamiento |
 | --- | --- |
 | `button_polling.py` | Sondea cada 20 ms; exige 200 ms de nivel estable. |
@@ -16,7 +14,7 @@ Sustituye el nombre del archivo en el comando para ejecutar las otras variantes.
 
 ## Requisitos
 
-Raspberry Pi 3/4, pulsador, LED y resistencia de 330 Ω. Python 3.13 es el objetivo de verificación. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md). El funcionamiento físico requiere validación en una Pi; las pruebas con dobles no sustituyen el circuito.
+Raspberry Pi 3/4, pulsador, LED y resistencia de 330 Ω. Python 3.13. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -60,7 +58,3 @@ Las pulsaciones menores que la ventana de antirrebote pueden descartarse. El cal
 ## Problemas frecuentes
 
 Si siempre indica presionado, revisa que el pulsador conecte GPIO17 a GND y comprueba qué terminales están unidos internamente. Si falla el detector de flanco, revisa permisos, otros procesos GPIO y la versión del sistema.
-
-## Comprobación
-
-Comprueba el comportamiento descrito y repite el cierre con Ctrl+C. Las pruebas de lógica están en [pruebas](../../../pruebas/README.md); la validación física sigue pendiente hasta registrar una sesión real en Raspberry Pi.

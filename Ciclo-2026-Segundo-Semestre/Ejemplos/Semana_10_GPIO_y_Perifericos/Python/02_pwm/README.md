@@ -4,13 +4,11 @@
 
 Relacionar frecuencia y ciclo de trabajo con un buzzer pasivo y un servomotor.
 
-Estos programas son ejemplos de clase, no soluciones de evaluaciones.
-
 Para el servo ejecuta `uv run --locked --extra hardware Semana_10_GPIO_y_Perifericos/Python/02_pwm/servo_sweep.py`. Empieza con el servo sin carga y comprueba sus límites antes de permitir el barrido completo.
 
 ## Requisitos
 
-Raspberry Pi 3/4; buzzer pasivo de bajo consumo compatible con 3,3 V o servo con fuente externa regulada según su ficha técnica. Python 3.13 es el objetivo de verificación. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md). El funcionamiento físico requiere validación en una Pi; las pruebas con dobles no sustituyen el circuito.
+Raspberry Pi 3/4; buzzer pasivo de bajo consumo compatible con 3,3 V o servo con fuente externa regulada según su ficha técnica. Python 3.13. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -55,7 +53,3 @@ El buzzer repite los tonos 262, 330, 392 y 523 Hz, con 0,5 s por tono. `servo_sw
 ## Problemas frecuentes
 
 Si el buzzer solo hace clic, comprueba que sea pasivo. Si el servo vibra, revisa alimentación, tierra común y calibración; detén el programa si alcanza un tope mecánico.
-
-## Comprobación
-
-Comprueba el comportamiento descrito y repite el cierre con Ctrl+C. Las pruebas de lógica están en [pruebas](../../../pruebas/README.md); la validación física sigue pendiente hasta registrar una sesión real en Raspberry Pi.

@@ -1,6 +1,6 @@
 # Semana 04: registros e instrucciones A64
 
-Filas 21–26 de `5_Diseño_Curricular.xlsx`, hoja `Diseño`, periodo Segundo Semestre 2026. Programas cortos de registros, aritmética, lógica y desplazamientos; no requieren C ni periféricos.
+Programas cortos de registros, aritmética, lógica y desplazamientos; no requieren C ni periféricos.
 
 | Archivo | Resultados en la etiqueta `resultados` |
 | --- | --- |
@@ -47,4 +47,4 @@ Escribir W9 elimina los 32 bits altos de X9. SDIV trunca hacia cero. LSL opera a
 
 En Linux AArch64 nativo cambia a `Makefile.arm64`; esa ejecución física sigue pendiente.
 
-[Índice general](../README.md) · [Pruebas](../pruebas/README.md).
+[Índice general](../README.md).

@@ -1,6 +1,6 @@
 # Semana 03: entorno ARM64
 
-Filas 15–20 de `5_Diseño_Curricular.xlsx`, hoja `Diseño`, periodo Segundo Semestre 2026: toolchain GNU, QEMU, Make, GDB y ELF.
+Toolchain GNU, QEMU, Make, GDB y ELF.
 
 Se conserva [00_hello_world.s](ARM64/00_hello_world.s). Un solo programa permite recorrer ensamblado, enlace, ejecución e inspección. El mensaje usa la rutina compartida de escritura; aquí se estudia el entorno, no su implementación.
 
@@ -56,4 +56,4 @@ El breakpoint está en la segunda instrucción de `_start` (cada instrucción A6
 
 En una Raspberry Pi con Linux de 64 bits utiliza `Makefile.arm64`, `readelf`, `objdump` y `gdb` nativos. La ejecución física sigue pendiente.
 
-[Índice general](../README.md) · [Pruebas](../pruebas/README.md).
+[Índice general](../README.md).

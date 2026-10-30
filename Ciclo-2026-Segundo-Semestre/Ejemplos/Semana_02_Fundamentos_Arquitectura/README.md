@@ -1,6 +1,6 @@
 # Semana 02: fundamentos de arquitectura
 
-Apoyo a representación de datos: fila 14 de `5_Diseño_Curricular.xlsx`, hoja `Diseño`, periodo Segundo Semestre 2026. Los ejemplos usan solo Python estándar y muestran resultados en terminal.
+Los ejemplos usan solo Python estándar y muestran resultados en terminal.
 
 | Archivo | Qué enseña y resultado esperado |
 | --- | --- |
@@ -22,6 +22,4 @@ python3.13 Semana_02_Fundamentos_Arquitectura/Python/04_bytes_endianness.py
 
 Python no limita sus enteros a ocho bits: la máscara `& 0xFF` lo hace explícitamente. Por eso `AA << 1` produce 340 (`154` hexadecimal), mientras que al conservar solo ocho bits queda `54`. El desplazamiento de −8 a la derecha produce −4. Los offsets de bytes son posiciones conceptuales, no direcciones físicas.
 
-Para comprobar resultados: `python3.13 -m unittest discover -s pruebas -p test_fundamentos.py -v`.
-
-[Índice general](../README.md) · [Pruebas](../pruebas/README.md).
+[Índice general](../README.md).

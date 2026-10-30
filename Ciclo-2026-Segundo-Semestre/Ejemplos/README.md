@@ -18,5 +18,4 @@ Programas educativos organizados según `5_Diseño_Curricular.xlsx`, hoja `Dise�
 Abre esta carpeta **`Ejemplos/`** en terminal o VS Code: todos los comandos parten de aquí. Se comparten Makefiles, configuración Python, dependencias, herramientas y datos.
 
 - Preparación: [ARM64](documentacion/arm64.md), [Python](documentacion/preparar_entorno.md) y [conexiones GPIO](documentacion/gpio_y_sensores.md).
-- Comprobaciones: [pruebas](pruebas/README.md) y [validación e historial](documentacion/interna/VALIDACION.md). El hardware físico sigue pendiente.
 - [Procedencia, atribuciones y situación de licencia](documentacion/ATRIBUCIONES.md).

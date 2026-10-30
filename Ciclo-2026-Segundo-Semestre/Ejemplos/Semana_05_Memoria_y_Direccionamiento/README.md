@@ -1,6 +1,6 @@
 # Semana 05: memoria y direccionamiento
 
-Ejemplos de los temas de las filas 27–31 de `5_Diseño_Curricular.xlsx`, hoja `Diseño`, periodo Segundo Semestre 2026. Un arreglo `.quad` contiene cuatro enteros de ocho bytes, alineados a ocho bytes. Las direcciones son virtuales del proceso, no físicas.
+Un arreglo `.quad` contiene cuatro enteros de ocho bytes, alineados a ocho bytes. Las direcciones son virtuales del proceso, no físicas.
 
 | Archivo | Qué enseña y resultado esperado en `resultados` |
 | --- | --- |
@@ -48,4 +48,4 @@ Repite con `02_pre_post_indexing`. Además de `x/4gd &arreglo`, usa `print /d ($
 
 En Linux AArch64 nativo cambia a `Makefile.arm64`; esa ejecución física sigue pendiente.
 
-[Índice general](../README.md) · [Pruebas](../pruebas/README.md).
+[Índice general](../README.md).

@@ -4,13 +4,9 @@
 
 Configurar una salida GPIO y alternar sus niveles con una pausa de un segundo.
 
-Estos programas son ejemplos de clase, no soluciones de evaluaciones.
-
-
-
 ## Requisitos
 
-Raspberry Pi 3/4, protoboard, LED y resistencia de 330 Ω. Python 3.13 es el objetivo de verificación. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md). El funcionamiento físico requiere validación en una Pi; las pruebas con dobles no sustituyen el circuito.
+Raspberry Pi 3/4, protoboard, LED y resistencia de 330 Ω. Python 3.13. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -52,7 +48,3 @@ Las pausas dependen del planificador de Linux; no son temporización de precisi�
 ## Problemas frecuentes
 
 Si no enciende, revisa la polaridad, la resistencia y GPIO21: el código usa numeración BCM, no el número físico 21.
-
-## Comprobación
-
-Comprueba el comportamiento descrito y repite el cierre con Ctrl+C. Las pruebas de lógica están en [pruebas](../../../pruebas/README.md); la validación física sigue pendiente hasta registrar una sesión real en Raspberry Pi.

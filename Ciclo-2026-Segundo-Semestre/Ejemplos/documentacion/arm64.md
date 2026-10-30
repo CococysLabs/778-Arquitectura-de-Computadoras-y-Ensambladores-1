@@ -156,19 +156,6 @@ El contador debe mostrar 100 antes de que el programa ponga x0 a cero para salir
 
 Los perfiles incluidos en `.vscode/` son opcionales. Para utilizarlos, abre la raíz `Ejemplos/` como carpeta de VS Code y selecciona un archivo ejecutable. El perfil nativo requiere abrir esa carpeta mediante Remote-SSH en la Pi. F5, StackScope y la depuración nativa física siguen pendientes de comprobación visual; la sesión CLI QEMU/GDB sí se verificó.
 
-## Pruebas y limitaciones
-
-Desde la raíz `Ejemplos/`:
-
-```bash
-python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
-PRUEBAS_GDB=1 python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
-```
-
-La segunda orden activa la sesión TCP real de GDB. Las demás pruebas ejecutan binarios AArch64 reales con QEMU, incluidos límites de entrada y preservación de registros. No emulan sensores físicos.
-
-Consulta el [registro de validación](interna/VALIDACION.md). Ninguno de estos ejemplos es una solución de evaluación; se excluyen parciales, tarea, práctica resuelta, proyecto completo y shell reservado.
-
 ## Problemas frecuentes
 
 - Archivo no encontrado: inicia desde `Ejemplos/`; las rutas son relativas al directorio de ejecución.

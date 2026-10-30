@@ -72,8 +72,6 @@ El texto publicado no contiene una lectura física. QoS 0 no asegura recepción 
 
 Esta demostración usa TCP sin TLS ni autenticación y debe limitarse a una red de laboratorio controlada. No envíes datos personales ni credenciales a un broker público. Una conexión exitosa no implica entrega a todos los receptores.
 
-Las pruebas de servicios locales están separadas de los dobles de lógica: [instrucciones de prueba](../../../pruebas/README.md).
-
 ## Problemas frecuentes
 
 - Conexión rechazada: revisa puerto, broker y dirección. Un contenedor necesita publicar su puerto.

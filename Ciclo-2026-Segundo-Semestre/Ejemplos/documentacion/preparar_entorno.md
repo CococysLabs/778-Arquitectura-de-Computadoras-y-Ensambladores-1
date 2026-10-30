@@ -87,4 +87,4 @@ Esta alternativa fija dependencias directas; para reproducir también las transi
 - Los paquetes de Raspberry Pi contienen componentes nativos: repetir instalación y pruebas en ARM64 es obligatorio antes de afirmar compatibilidad completa.
 - Mantén `.venv/`, `__pycache__/` y `.env` fuera de Git.
 
-Consulta el [registro de resultados](interna/REGISTRO_PYTHON.md), las [pruebas](../pruebas/README.md) y las [reglas de conexión GPIO](gpio_y_sensores.md).
+Consulta las [reglas de conexión GPIO](gpio_y_sensores.md).

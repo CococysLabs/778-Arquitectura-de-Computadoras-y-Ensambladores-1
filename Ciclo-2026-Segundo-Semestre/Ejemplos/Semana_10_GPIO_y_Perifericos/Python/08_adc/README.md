@@ -8,7 +8,7 @@ Para el segundo conversor: `uv run --locked --extra hardware Semana_10_GPIO_y_Pe
 
 ## Requisitos
 
-Pi 3/4, ADS1115 o PCF8591 y fuente analógica dentro del rango permitido por la ficha del conversor. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md). La ejecución física en Pi 3/4 está pendiente de comprobación; la sintaxis y las pruebas con dobles no acreditan compatibilidad eléctrica.
+Pi 3/4, ADS1115 o PCF8591 y fuente analógica dentro del rango permitido por la ficha del conversor. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -56,7 +56,3 @@ El código digital del ADS1115 procede de la representación que entrega la bibl
 ## Problemas frecuentes
 
 Si no aparece el dispositivo, activa I²C y comprueba dirección y alimentación. Una lectura saturada exige revisar la tensión de entrada y la ganancia. Un valor PCF8591 no es una medición en voltios.
-
-## Comprobación
-
-Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../documentacion/interna/REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.

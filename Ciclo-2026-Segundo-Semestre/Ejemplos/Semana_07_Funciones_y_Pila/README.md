@@ -1,6 +1,6 @@
 # Semana 07: Funciones y pila
 
-Filas 39–42: SP, alineación, marcos, parámetros y preservación de registros. Fuente: `5_Diseño_Curricular.xlsx`, hoja `Diseño`, `C5`: Segundo Semestre 2026.
+SP, alineación, marcos, parámetros y preservación de registros.
 
 | Archivo | Qué enseña |
 | --- | --- |
@@ -14,8 +14,8 @@ Abre la raíz `Ejemplos/`, instala los requisitos de la [guía ARM64](../documen
 make -f Makefile.qemu SRC=Semana_07_Funciones_y_Pila/ARM64/07_sum_and_subtract.s run
 ```
 
-En Linux AArch64 nativo utiliza `Makefile.arm64` en el mismo comando. Cambia `SRC` por otro ejecutable de la tabla. Los auxiliares sin `_start` no se ejecutan solos: sus contratos y pruebas están en la guía común.
+En Linux AArch64 nativo utiliza `Makefile.arm64` en el mismo comando. Cambia `SRC` por otro ejecutable de la tabla. Los auxiliares sin `_start` no se ejecutan solos: sus contratos están en la guía común.
 
-Los lectores usan una sola copia de [datos sintéticos](../datos/lecturas.csv), con ruta relativa a `Ejemplos/`. El ejemplo de pila consume los auxiliares de las semanas 06 y 08; esto no implica interoperabilidad con C.
+Los lectores usan una sola copia de [datos sintéticos](../datos/lecturas.csv), con ruta relativa a `Ejemplos/`. El ejemplo de pila consume los auxiliares de las semanas 06 y 08.
 
-Consulta las [pruebas](../pruebas/README.md), el [estado de validación](../documentacion/interna/VALIDACION.md) y el [índice general](../README.md). La ejecución física en Raspberry Pi sigue pendiente.
+[Índice general](../README.md).

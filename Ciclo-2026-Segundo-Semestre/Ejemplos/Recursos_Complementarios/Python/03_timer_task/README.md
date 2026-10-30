@@ -4,13 +4,11 @@
 
 Ejecutar una tarea periódica sin bloquear el trabajo principal y detenerla antes de liberar GPIO.
 
-Estos programas son ejemplos de clase, no soluciones de evaluaciones.
-
 Para comparar, ejecuta `uv run --locked --extra hardware Recursos_Complementarios/Python/03_timer_task/timer_rearm.py`. El cierre del hilo usa un evento; el temporizador protege el rearme y la cancelación con un bloqueo.
 
 ## Requisitos
 
-Raspberry Pi 3/4, LED y resistencia de 330 Ω. Python 3.13 es el objetivo de verificación. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md). El funcionamiento físico requiere validación en una Pi; las pruebas con dobles no sustituyen el circuito.
+Raspberry Pi 3/4, LED y resistencia de 330 Ω. Python 3.13. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -52,7 +50,3 @@ No son tareas de tiempo real: el intervalo incluye retrasos del sistema y, en el
 ## Problemas frecuentes
 
 Si otro programa controla el mismo pin, ciérralo antes de iniciar. Para salir usa Ctrl+C en la terminal del proceso; espera el cierre antes de volver a ejecutarlo.
-
-## Comprobación
-
-Comprueba el comportamiento descrito y repite el cierre con Ctrl+C. Las pruebas de lógica están en [pruebas](../../../pruebas/README.md); la validación física sigue pendiente hasta registrar una sesión real en Raspberry Pi.

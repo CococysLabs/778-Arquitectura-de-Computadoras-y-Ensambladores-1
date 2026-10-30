@@ -8,7 +8,7 @@ También puedes ejecutar `lcd_multiline.py` o `lcd_screens.py` cambiando el nomb
 
 ## Requisitos
 
-Pi 3/4, LCD HD44780 16×2 con adaptador PCF8574 y adaptación de nivel si el módulo trabaja a 5 V. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md). La ejecución física en Pi 3/4 está pendiente de comprobación; la sintaxis y las pruebas con dobles no acreditan compatibilidad eléctrica.
+Pi 3/4, LCD HD44780 16×2 con adaptador PCF8574 y adaptación de nivel si el módulo trabaja a 5 V. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -54,7 +54,3 @@ Un LCD 16×2 no muestra mensajes arbitrariamente largos completos. Su ROM puede 
 ## Problemas frecuentes
 
 Si aparece una fila de bloques, ajusta el contraste y revisa conexiones. Si el dispositivo no responde, comprueba la dirección con `i2cdetect -y 1` únicamente en el bus del circuito de laboratorio. No asumas que todos los adaptadores usan `0x27`.
-
-## Comprobación
-
-Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../documentacion/interna/REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.

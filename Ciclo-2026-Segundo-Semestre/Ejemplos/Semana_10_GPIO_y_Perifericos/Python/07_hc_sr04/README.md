@@ -8,7 +8,7 @@ Convertir la duración de un pulso de eco en distancia y limitar la espera si el
 
 ## Requisitos
 
-Pi 3/4, HC-SR04 estándar de 5 V, resistencias de 2,2 kΩ y 3,3 kΩ para dividir ECHO, protoboard y cables. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md). La ejecución física en Pi 3/4 está pendiente de comprobación; la sintaxis y las pruebas con dobles no acreditan compatibilidad eléctrica.
+Pi 3/4, HC-SR04 estándar de 5 V, resistencias de 2,2 kΩ y 3,3 kΩ para dividir ECHO, protoboard y cables. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -54,7 +54,3 @@ Se supone velocidad del sonido de 343 m/s. La espera de 20 ms por fase limita el
 ## Problemas frecuentes
 
 Sin eco, comprueba alimentación, divisor y conexiones TRIG/ECHO. Si las lecturas fluctúan, usa una superficie amplia y mantén el objeto estable; no reemplaces `None` por una distancia inventada.
-
-## Comprobación
-
-Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../documentacion/interna/REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.

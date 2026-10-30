@@ -8,7 +8,7 @@
 - Alcance: ejemplos educativos de `01_PYTHON/` y los programas 00–10 aprobados de `02_ARM64/`, con exclusiones.
 - Autorización: el titular confirmó permiso de redistribución de su código propio durante la preparación de este aporte.
 
-Se conservan los objetivos originales y se corrigen errores de seguridad de buffers, EOF, temporización, cierre de recursos y documentación. Las rutinas auxiliares y pruebas nuevas acompañan las adaptaciones.
+Se conservan los objetivos originales y se corrigen errores de seguridad de buffers, EOF, temporización, cierre de recursos y documentación. Las rutinas auxiliares acompañan las adaptaciones.
 
 ## Ejemplos nuevos de semanas 02, 04 y 05
 

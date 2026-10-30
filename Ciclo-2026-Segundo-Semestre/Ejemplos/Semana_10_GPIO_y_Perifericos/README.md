@@ -1,6 +1,6 @@
 # Semana 10: GPIO y periféricos
 
-Filas 57–62 de `5_Diseño_Curricular.xlsx`, hoja `Diseño`: interfaz hardware–software, GPIO, polling/callbacks y buses. Estos ejemplos Python sirven como apoyo práctico de E/S; no implementan MMIO directo ni rutinas C/Assembly.
+Ejemplos Python de GPIO, sensores y periféricos para Raspberry Pi.
 
 | Grupo | Qué enseña |
 | --- | --- |
@@ -21,6 +21,6 @@ uv sync --locked --extra hardware
 uv run --locked --extra hardware Semana_10_GPIO_y_Perifericos/Python/00_blink/blink.py
 ```
 
-Cambia la ruta por el programa del grupo que estudiarás. Ejecuta un circuito a la vez y termina con Ctrl+C. Revisa [preparación](../documentacion/preparar_entorno.md), [límites eléctricos y conexiones](../documentacion/gpio_y_sensores.md) y [pruebas](../pruebas/README.md). Las pruebas con dobles no acreditan funcionamiento físico.
+Cambia la ruta por el programa del grupo que estudiarás. Ejecuta un circuito a la vez y termina con Ctrl+C. Revisa la [preparación](../documentacion/preparar_entorno.md) y los [límites eléctricos y conexiones](../documentacion/gpio_y_sensores.md).
 
 [Volver al índice](../README.md).

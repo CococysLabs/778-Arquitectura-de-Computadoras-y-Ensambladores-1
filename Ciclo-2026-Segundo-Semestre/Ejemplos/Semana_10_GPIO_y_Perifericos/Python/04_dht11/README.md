@@ -8,7 +8,7 @@ Ejecuta la variante periódica con `uv run --locked --extra hardware Semana_10_G
 
 ## Requisitos
 
-Pi 3/4, sensor DHT11 y resistencia pull-up de 4,7–10 kΩ si no está integrada en el módulo. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md). La ejecución física en Pi 3/4 está pendiente de comprobación; la sintaxis y las pruebas con dobles no acreditan compatibilidad eléctrica.
+Pi 3/4, sensor DHT11 y resistencia pull-up de 4,7–10 kΩ si no está integrada en el módulo. Consulta [preparación y versiones](../../../documentacion/preparar_entorno.md).
 
 ## Conexiones físicas
 
@@ -53,7 +53,3 @@ El DHT11 ofrece precisión y frecuencia de muestreo limitadas. Las lecturas depe
 ## Problemas frecuentes
 
 Errores ocasionales de lectura son habituales; si persisten revisa pull-up, alimentación y cableado. Si falta el backend de GPIO de Blinka, revisa el sistema y libgpiod según la guía del entorno.
-
-## Comprobación
-
-Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../documentacion/interna/REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.
