@@ -11,6 +11,11 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {
+    "01_registros": "Semana_04_Registros_e_Instrucciones_A64/ARM64/01_registros.s",
+    "02_aritmetica": "Semana_04_Registros_e_Instrucciones_A64/ARM64/02_aritmetica.s",
+    "03_logica_y_desplazamientos": "Semana_04_Registros_e_Instrucciones_A64/ARM64/03_logica_y_desplazamientos.s",
+    "01_memoria_y_offsets": "Semana_05_Memoria_y_Direccionamiento/ARM64/01_memoria_y_offsets.s",
+    "02_pre_post_indexing": "Semana_05_Memoria_y_Direccionamiento/ARM64/02_pre_post_indexing.s",
     '00_hello_world': 'Semana_03_Entorno_ARM64/ARM64/00_hello_world.s',
     '01_if': 'Semana_06_Control_Flujo_y_Funciones/ARM64/01_if.s',
     '02_while': 'Semana_06_Control_Flujo_y_Funciones/ARM64/02_while.s',
@@ -30,12 +35,15 @@ INCLUDE_DIRS = (
 )
 PROGRAMS = ("00_hello_world", "01_if", "02_while", "03_read_file",
             "04_process_buffer", "07_sum_and_subtract", "09_read_input",
-            "10_select_menu")
-TOOLS = ("make", "aarch64-linux-gnu-as", "aarch64-linux-gnu-ld", "qemu-aarch64")
+            "10_select_menu",
+            "01_registros", "02_aritmetica", "03_logica_y_desplazamientos",
+            "01_memoria_y_offsets", "02_pre_post_indexing")
+TOOLS = ("make", "aarch64-linux-gnu-as", "aarch64-linux-gnu-ld", "qemu-aarch64",
+         "aarch64-linux-gnu-readelf", "aarch64-linux-gnu-objdump")
 
 
 @unittest.skipUnless(all(shutil.which(tool) for tool in TOOLS),
-                     "Requiere make, binutils AArch64 y QEMU.")
+                     "Requiere make, binutils AArch64 (as/ld/readelf/objdump) y QEMU.")
 class ARMTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -297,13 +305,84 @@ svc #0
                     self.assertIn(b"aarch64-linux-gnu-as", result.stdout)
                     self.assertEqual(subprocess.run(command + ["-q"], cwd=cwd).returncode, 0)
 
+    def test_introductory_programs_exit_and_elf(self):
+        for program in ("01_registros", "02_aritmetica", "03_logica_y_desplazamientos",
+                        "01_memoria_y_offsets", "02_pre_post_indexing"):
+            with self.subTest(program=program):
+                result = self.execute(program)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.stdout, b"")
+        executable = self.build / Path(SOURCES["00_hello_world"]).with_suffix("")
+        header = subprocess.run(["aarch64-linux-gnu-readelf", "-h", str(executable)],
+                                capture_output=True, check=True)
+        self.assertIn(b"AArch64", header.stdout)
+        code = subprocess.run(["aarch64-linux-gnu-objdump", "-d", str(executable)],
+                              capture_output=True, check=True)
+        self.assertIn(b"<_start>:", code.stdout)
+        self.assertIn(b"svc", code.stdout)
+
     @unittest.skipUnless(os.getenv("PRUEBAS_GDB") == "1" and shutil.which("gdb-multiarch"),
                          "Activar PRUEBAS_GDB=1 para sesión TCP real con GDB.")
     def test_real_gdb_loop_counter(self):
+        output = self.inspect_with_gdb(
+            "02_while", ['printf "contador=%ld\\n", $x0'], breakpoint="finWhile")
+        self.assertIn(b"contador=100", output)
+
+    @unittest.skipUnless(os.getenv("PRUEBAS_GDB") == "1" and shutil.which("gdb-multiarch"),
+                         "Activar PRUEBAS_GDB=1 para inspeccionar Hello World.")
+    def test_real_gdb_hello_world_step_and_memory(self):
+        output = self.inspect_with_gdb("00_hello_world", [
+            "stepi", "x/14cb $x1",
+            'printf "inicio=%d final=%d\\n", *(unsigned char*)$x1, *((unsigned char*)$x1+13)'],
+            breakpoint="*_start+4")
+        self.assertIn(b"inicio=72 final=10", output)
+
+    @unittest.skipUnless(os.getenv("PRUEBAS_GDB") == "1" and shutil.which("gdb-multiarch"),
+                         "Activar PRUEBAS_GDB=1 para inspeccionar registros y flags.")
+    def test_real_gdb_registers_arithmetic_and_bits(self):
+        cases = (
+            ("01_registros", ['printf "x9=%ld x10=%#lx x11=%ld\\n", $x9, $x10, $x11'],
+             (b"x9=42 x10=0x123456789abcdef0 x11=0",)),
+            ("02_aritmetica", [
+                'printf "suma=%ld resta=%ld producto=%ld sdiv=%ld udiv=%ld\\n", $x11, $x12, $x13, $x14, $x15',
+                'printf "w18=%#lx nzcv=%#lx\\n", $x18, $cpsr & 0xf0000000'],
+             (b"suma=26 resta=14 producto=120 sdiv=3 udiv=3",
+              b"w18=0x80000000 nzcv=0x90000000")),
+            ("03_logica_y_desplazamientos", [
+                'printf "and=%#lx or=%#lx xor=%#lx bic=%#lx lsl=%#lx lsr=%#lx asr=%ld\\n", $x11, $x12, $x13, $x14, $x15, $x16, $x18'],
+             (b"and=0xa or=0xaf xor=0xa5 bic=0xa0 lsl=0x154 lsr=0x55 asr=-4",)),
+        )
+        for program, commands, expected in cases:
+            with self.subTest(program=program):
+                output = self.inspect_with_gdb(program, commands)
+                for value in expected:
+                    self.assertIn(value, output)
+
+    @unittest.skipUnless(os.getenv("PRUEBAS_GDB") == "1" and shutil.which("gdb-multiarch"),
+                         "Activar PRUEBAS_GDB=1 para inspeccionar memoria y punteros.")
+    def test_real_gdb_memory_and_indexing(self):
+        array = ('printf "arreglo=%ld,%ld,%ld,%ld\\n", '
+                 '*((long long*)&arreglo), *((long long*)&arreglo+1), '
+                 '*((long long*)&arreglo+2), *((long long*)&arreglo+3)')
+        cases = (
+            ("01_memoria_y_offsets", [array,
+                'printf "cargas=%ld,%ld,%ld byte=%ld signo=%ld\\n", $x10, $x11, $x14, $x16, $x17'],
+             (b"arreglo=10,25,30,40", b"cargas=10,20,30 byte=251 signo=-5")),
+            ("02_pre_post_indexing", [array,
+                'printf "offsets=%ld,%ld,%ld,%ld leidos=%ld,%ld guardado=%ld\\n", $x15-$x12, $x16-$x12, $x17-$x12, $x9-$x12, $x10, $x11, $x18'],
+             (b"arreglo=10,20,77,40", b"offsets=8,16,24,16 leidos=20,20 guardado=99")),
+        )
+        for program, commands, expected in cases:
+            with self.subTest(program=program):
+                output = self.inspect_with_gdb(program, commands)
+                for value in expected:
+                    self.assertIn(value, output)
+
+    def inspect_with_gdb(self, program, commands, breakpoint="resultados"):
         with socket.socket() as probe:
             probe.bind(("127.0.0.1", 0))
             port = probe.getsockname()[1]
-        executable = self.build / Path(SOURCES["02_while"]).with_suffix("")
+        executable = self.build / Path(SOURCES[program]).with_suffix("")
         emulator = subprocess.Popen(
             ["qemu-aarch64", "-g", str(port), str(executable)],
             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -313,12 +392,13 @@ svc #0
                 ["gdb-multiarch", "--batch", "-nx", str(executable),
                  "-ex", "set pagination off", "-ex", "set architecture aarch64",
                  "-ex", f"target remote 127.0.0.1:{port}",
-                 "-ex", "break finWhile", "-ex", "continue",
-                 "-ex", 'printf "contador=%ld\\n", $x0', "-ex", "detach"],
+                 "-ex", f"break {breakpoint}", "-ex", "continue",
+                 *[argument for command in commands for argument in ("-ex", command)],
+                 "-ex", "detach"],
                 capture_output=True, timeout=10)
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertIn(b"contador=100", result.stdout)
             self.assertEqual(emulator.wait(timeout=5), 0)
+            return result.stdout
         finally:
             if emulator.poll() is None:
                 emulator.kill()

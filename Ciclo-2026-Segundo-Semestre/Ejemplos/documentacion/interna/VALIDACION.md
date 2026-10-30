@@ -1,3 +1,43 @@
+# Validación de semanas 02–05 — 30 de octubre de 2026
+
+Continuación de la rama `feature/organizar-ejemplos-semanas-2s2026` desde `c4907d02853f04596273f0e4c253db949332f2c7`. Fuente curricular: `5_Diseño_Curricular.xlsx`, hoja `Diseño`, C5: Segundo Semestre 2026; filas 9–32 para semanas 02–05.
+
+## Resultados vigentes
+
+| Comprobación | Resultado y alcance |
+| --- | --- |
+| Suite completa | **47 pruebas aprobadas, cero fallos y cero omisiones**: 4 de fundamentos, 19 de lógica Python existente, 20 ARM64 y 4 con servicios reales. |
+| Semana 02 | Cuatro programas Python ejecutados: bases, complemento a dos, bits y endianness. Se verifica su salida, incluidos −128, −5, 0 y 127 en ocho bits. No requieren extras. |
+| Semana 03 | Hello World conservado. readelf confirma ELF AArch64 y objdump el símbolo `_start` y SVC. Sesión GDB real con breakpoint, instrucción individual y memoria del mensaje. |
+| Semana 04 | Tres programas ensamblados, enlazados y ejecutados con QEMU. GDB comprueba escritura W/X, MOVZ/MOVK, cero, aritmética, NZCV, máscaras y desplazamientos. |
+| Semana 05 | Dos programas ejecutados con QEMU. GDB comprueba arreglo modificado, offsets inmediatos/escalados, extensión con y sin signo y actualización de base antes/después del acceso. |
+| Regresión | Se repiten todas las pruebas anteriores: buffers, EOF, menú, límites numéricos, pila, registros preservados y reconstrucción de auxiliares. |
+| Makefiles | Trece ejecutables admitidos en ambos Makefiles; dry-run nativo de los trece correcto. Las pruebas de dependencias y reconstrucción también se repitieron tras presentar la lista de programas por semana en líneas legibles. |
+| Servicios locales | Tres pruebas MQTT reales con Mosquitto 2.0 y una MongoDB 8.0; solo datos sintéticos y base temporal eliminada al terminar. |
+| Conservación | 45 archivos funcionales anteriores comparados byte a byte contra `c4907d0`: programas, auxiliares, datos, dependencias y perfiles VS Code. Se conservan sus contenidos. Makefiles y pruebas se amplían para los nuevos ejemplos. |
+| Dependencias | Sin cambios en pyproject.toml ni uv.lock. `uv pip check --python .venv/bin/python` comprueba cuatro paquetes sin incompatibilidades. |
+| Documentación | Solo README.md permanece como Markdown en la raíz. Inventario, registro y validación histórica se trasladan aquí; atribuciones y guías técnicas quedan en documentacion/. Enlaces comprobados con el verificador existente. |
+| Alcance | Cambios limitados a `Ciclo-2026-Segundo-Semestre/Ejemplos/`; sin nuevos ejemplos C, dependencias ni binarios publicados. |
+
+La prueba introductoria de GDB permitió corregir el breakpoint del README: al conectar QEMU ya está detenido al inicio, por lo que se coloca el breakpoint en `*_start+4` para observar X1 después de cargar la dirección del mensaje. La suite completa se repitió tras ese ajuste.
+
+## Reproducir
+
+Desde `Ejemplos/`, prepara los servicios locales según [pruebas/README.md](../../pruebas/README.md):
+
+```bash
+PRUEBAS_GDB=1 PRUEBAS_SERVICIOS=1 .venv/bin/python -m unittest discover -s pruebas -v
+python3.13 pruebas/verificar_repositorio.py
+uv pip check --python .venv/bin/python
+git diff --check
+```
+
+Entorno conservado: CPython 3.13.17, Linux x86-64, Binutils 2.42, QEMU 8.2.2 y GDB 15.1. PyMongo conserva su advertencia de obsolescencia previamente registrada.
+
+No se verificaron hardware físico, ejecución ARM64 nativa ni interfaz gráfica de VS Code. Las sesiones QEMU/GDB y los dobles GPIO no acreditan funcionamiento de sensores. El inventario y los resultados siguientes describen etapas anteriores; sus cifras no son el total actual.
+
+---
+
 # Validación de la organización semanal — 30 de octubre de 2026
 
 Base publicada: `cd55239b99654e4bd8dff2b40cab67d632a00a92` de `main`.
@@ -26,7 +66,7 @@ Las comprobaciones iniciales dentro del aislamiento encontraron dependencias aus
 
 ## Reproducir
 
-Desde la raíz `Ejemplos/`, prepara los servicios desechables como indica [pruebas/README.md](pruebas/README.md) y ejecuta:
+Desde la raíz `Ejemplos/`, prepara los servicios desechables como indica [pruebas/README.md](../../pruebas/README.md) y ejecuta:
 
 ```bash
 uv sync --locked --extra mqtt --extra mongodb
@@ -109,8 +149,8 @@ PRUEBAS_GDB=1 python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
 python3.13 pruebas/verificar_repositorio.py
 ```
 
-Las pruebas de servicios requieren activación y contenedores locales según [pruebas/README.md](pruebas/README.md). Las pruebas ARM64 usan directorios temporales y no sobrescriben `datos/lecturas.csv`.
+Las pruebas de servicios requieren activación y contenedores locales según [pruebas/README.md](../../pruebas/README.md). Las pruebas ARM64 usan directorios temporales y no sobrescriben `datos/lecturas.csv`.
 
 ## Revisión institucional
 
-La rama se prepara para revisión, sin modificar `main` ni crear un PR automáticamente. Cuando el titular decida abrirlo, debe indicar las pruebas realizadas y los pendientes, revisar las [atribuciones](ATRIBUCIONES.md) y solicitar revisión del equipo CODEOWNERS de esta ruta. La integración debe cumplir las aprobaciones institucionales.
+La rama se prepara para revisión, sin modificar `main` ni crear un PR automáticamente. Cuando el titular decida abrirlo, debe indicar las pruebas realizadas y los pendientes, revisar las [atribuciones](../ATRIBUCIONES.md) y solicitar revisión del equipo CODEOWNERS de esta ruta. La integración debe cumplir las aprobaciones institucionales.

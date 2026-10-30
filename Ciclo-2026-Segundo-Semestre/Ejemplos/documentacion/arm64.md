@@ -36,7 +36,7 @@ En una Raspberry Pi de 64 bits:
 make -f Makefile.arm64 SRC=Semana_03_Entorno_ARM64/ARM64/00_hello_world.s run
 ```
 
-Cambia `SRC` por uno de los ocho programas del índice. Los Makefiles rechazan las rutinas auxiliares como programas independientes. El archivo por defecto es `Semana_03_Entorno_ARM64/ARM64/00_hello_world.s`.
+Cambia `SRC` por uno de los trece programas del índice. Los Makefiles rechazan las rutinas auxiliares como programas independientes. El archivo por defecto es `Semana_03_Entorno_ARM64/ARM64/00_hello_world.s`.
 
 El ensamblador genera un objeto con símbolos de depuración, el enlazador produce un ELF y QEMU lo ejecuta. Objetos, ejecutables y dependencias quedan en `build/Semana_XX_Tema/ARM64/`, excluido de Git. Los archivos `.d` registran las inclusiones para reconstruir cuando cambia una rutina.
 
@@ -45,6 +45,11 @@ El ensamblador genera un objeto con símbolos de depuración, el enlazador produ
 | Programa | Objetivo y entrada | Resultado esperado |
 | --- | --- | --- |
 | `Semana_03_Entorno_ARM64/ARM64/00_hello_world.s` | Escribir un mensaje con una syscall | `Hello, World!` y salto de línea; código 0. |
+| `Semana_04_Registros_e_Instrucciones_A64/ARM64/01_registros.s` | X/W, MOVZ/MOVK y XZR | X9=42, X10=0x123456789abcdef0 y X11=0 en `resultados`. |
+| `Semana_04_Registros_e_Instrucciones_A64/ARM64/02_aritmetica.s` | Aritmética de 20 y 6; suma con overflow con signo | 26, 14, 120, 3 y 3; NZCV=1001. |
+| `Semana_04_Registros_e_Instrucciones_A64/ARM64/03_logica_y_desplazamientos.s` | Lógica, máscaras y desplazamientos | AND=0A, OR=AF, XOR=A5, BIC=A0, LSL=154, LSR=55 (hex); ASR=-4. |
+| `Semana_05_Memoria_y_Direccionamiento/ARM64/01_memoria_y_offsets.s` | LDR/STR, arreglo, offsets y extensión | Arreglo `[10, 25, 30, 40]`; byte sin signo 251 y con signo -5. |
+| `Semana_05_Memoria_y_Direccionamiento/ARM64/02_pre_post_indexing.s` | Lectura/escritura con actualización de base | Arreglo `[10, 20, 77, 40]`; offsets guardados 8, 16, 24 y final 16. |
 | `Semana_06_Control_Flujo_y_Funciones/ARM64/01_if.s` | Comparar un entero con 10; valor inicial 5 | `x es menor o igual que 10`. Al cambiar el valor a 11, muestra la rama mayor. |
 | `Semana_06_Control_Flujo_y_Funciones/ARM64/02_while.s` | Incrementar un registro hasta 100 | Sin texto; en `finWhile`, antes del cierre, x0 vale 100. Código 0. |
 | `Semana_08_Linux_y_Archivos/ARM64/03_read_file.s` | Copiar `datos/lecturas.csv` por bloques de 4096 bytes | Reproduce todos los bytes, incluido `$`; un archivo vacío no imprime datos. |
@@ -99,6 +104,8 @@ printf '9\n1\n2\n3\n' | qemu-aarch64 build/Semana_06_Control_Flujo_y_Funciones/A
 La opción 9 debe rechazarse. El menú valida toda la línea; `12` no equivale a opción 1. Una línea que exceda 64 bytes se consume y se rechaza completa. Se acepta CRLF. En una terminal Linux, Ctrl+D sobre una línea vacía indica EOF; Ctrl+C interrumpe el proceso.
 
 El ejemplo 09 muestra bloques de bytes, no implementa edición ni delimitación de líneas. Una entrada larga puede repartirse en varios bloques y un carácter UTF-8 puede quedar dividido entre ellos.
+
+Los cinco ejemplos nuevos de semanas 04 y 05 terminan sin imprimir texto; sus resultados se inspeccionan en la etiqueta `resultados`. Consulta [semana 04](../Semana_04_Registros_e_Instrucciones_A64/README.md) y [semana 05](../Semana_05_Memoria_y_Direccionamiento/README.md). Para ensamblar, inspeccionar ELF y practicar GDB desde cero, sigue [semana 03](../Semana_03_Entorno_ARM64/README.md).
 
 ## Rutinas auxiliares e interfaces
 
@@ -160,7 +167,7 @@ PRUEBAS_GDB=1 python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
 
 La segunda orden activa la sesión TCP real de GDB. Las demás pruebas ejecutan binarios AArch64 reales con QEMU, incluidos límites de entrada y preservación de registros. No emulan sensores físicos.
 
-Consulta el [registro de validación](../VALIDACION.md). Ninguno de estos ejemplos es una solución de evaluación; se excluyen parciales, tarea, práctica resuelta, proyecto completo y shell reservado.
+Consulta el [registro de validación](interna/VALIDACION.md). Ninguno de estos ejemplos es una solución de evaluación; se excluyen parciales, tarea, práctica resuelta, proyecto completo y shell reservado.
 
 ## Problemas frecuentes
 

@@ -10,6 +10,10 @@
 
 Se conservan los objetivos originales y se corrigen errores de seguridad de buffers, EOF, temporización, cierre de recursos y documentación. Las rutinas auxiliares y pruebas nuevas acompañan las adaptaciones.
 
+## Ejemplos nuevos de semanas 02, 04 y 05
+
+Se añadieron cuatro programas Python y cinco programas AArch64 para completar los fundamentos, registros/instrucciones y memoria/direccionamiento de 2S2026. Son ejemplos nuevos de este aporte; no proceden del repositorio de origen citado arriba. No se incorporaron bibliotecas ni código C. La situación de licencia institucional descrita abajo se conserva.
+
 ## Exclusiones
 
 No se redistribuyen el proyecto completo, soluciones de parciales, tarea, práctica resuelta ni ejemplos de shell reservados. Tampoco se incorporan las imágenes de GPIO ni recursos gráficos del proyecto: sus permisos y atribuciones no se han acreditado.

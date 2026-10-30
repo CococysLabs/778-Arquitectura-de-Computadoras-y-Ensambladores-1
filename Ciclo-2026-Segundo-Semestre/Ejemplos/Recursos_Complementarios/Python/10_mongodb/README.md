@@ -74,4 +74,4 @@ PyMongo 3.12.0 es antiguo y emite una advertencia deprecada en Python 3.13. Se m
 - Documentos repetidos: las inserciones son acumulativas; utiliza otra base de laboratorio si deseas comenzar de nuevo.
 - URI `mongodb+srv://`: requiere DNS y acceso externo. Las comprobaciones locales utilizan `mongodb://`; no acreditan Atlas ni infraestructura institucional.
 
-Consulta las [pruebas](../../../pruebas/README.md) y el [registro de validación](../../../REGISTRO_PYTHON.md).
+Consulta las [pruebas](../../../pruebas/README.md) y el [registro de validación](../../../documentacion/interna/REGISTRO_PYTHON.md).

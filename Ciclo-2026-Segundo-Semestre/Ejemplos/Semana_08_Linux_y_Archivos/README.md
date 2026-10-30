@@ -21,4 +21,4 @@ En Linux AArch64 nativo utiliza `Makefile.arm64` en el mismo comando. Cambia `SR
 
 Los lectores usan una sola copia de [datos sintéticos](../datos/lecturas.csv), con ruta relativa a `Ejemplos/`. El ejemplo de pila consume los auxiliares de las semanas 06 y 08; esto no implica interoperabilidad con C.
 
-Consulta las [pruebas](../pruebas/README.md), el [estado de validación](../VALIDACION.md) y el [índice general](../README.md). La ejecución física en Raspberry Pi sigue pendiente.
+Consulta las [pruebas](../pruebas/README.md), el [estado de validación](../documentacion/interna/VALIDACION.md) y el [índice general](../README.md). La ejecución física en Raspberry Pi sigue pendiente.

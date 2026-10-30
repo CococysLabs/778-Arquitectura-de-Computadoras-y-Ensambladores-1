@@ -22,4 +22,4 @@ En Linux AArch64 nativo utiliza `Makefile.arm64` en el mismo comando. Cambia `SR
 
 El menú usa las rutinas comunes de E/S; su objetivo aquí es practicar decisiones. Las conversiones se estudian como funciones reutilizables, sin agregar programas nuevos. Para comprobar auxiliares: `python3.13 -m unittest discover -s pruebas -p test_arm64.py -v`, desde `Ejemplos/`.
 
-Consulta las [pruebas](../pruebas/README.md), el [estado de validación](../VALIDACION.md) y el [índice general](../README.md). La ejecución física en Raspberry Pi sigue pendiente.
+Consulta las [pruebas](../pruebas/README.md), el [estado de validación](../documentacion/interna/VALIDACION.md) y el [índice general](../README.md). La ejecución física en Raspberry Pi sigue pendiente.

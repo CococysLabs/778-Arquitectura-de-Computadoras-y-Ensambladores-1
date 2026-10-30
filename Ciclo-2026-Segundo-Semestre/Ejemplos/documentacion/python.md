@@ -2,7 +2,9 @@
 
 Ejemplos de clase del curso 778 para estudiar interfaces de entrada/salida, concurrencia, sensores e intercambio de datos. Las carpetas y los nombres son convenciones propuestas para este conjunto; no se presentan como reglas institucionales obligatorias.
 
-Empieza por [preparar el entorno](preparar_entorno.md) y [revisar conexiones GPIO](gpio_y_sensores.md).
+Los cuatro ejemplos de [fundamentos de arquitectura de semana 02](../Semana_02_Fundamentos_Arquitectura/README.md) usan solo Python estándar; no necesitan Pi ni extras.
+
+Para los diez grupos de GPIO y comunicación, empieza por [preparar el entorno](preparar_entorno.md) y [revisar conexiones GPIO](gpio_y_sensores.md).
 
 | Tema | Programas | Propósito | Requisitos |
 | --- | --- | --- | --- |
@@ -33,7 +35,7 @@ Instala solo el extra necesario: `hardware`, `mqtt` o `mongodb`. Los programas f
 
 Las pruebas de lógica utilizan dobles explícitos. Las pruebas de integración requieren servicios reales y se activan por separado. Ninguna prueba con datos sintéticos acredita lecturas de sensores.
 
-Consulta las [instrucciones de pruebas](../pruebas/README.md) y el [registro de resultados](../REGISTRO_PYTHON.md). La ejecución física y la instalación ARM64 en Pi 3/4 siguen pendientes.
+Consulta las [instrucciones de pruebas](../pruebas/README.md) y el [registro de resultados](interna/REGISTRO_PYTHON.md). La ejecución física y la instalación ARM64 en Pi 3/4 siguen pendientes.
 
 ## Procedencia
 

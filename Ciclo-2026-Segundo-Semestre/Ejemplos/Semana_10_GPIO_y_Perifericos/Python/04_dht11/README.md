@@ -56,4 +56,4 @@ Errores ocasionales de lectura son habituales; si persisten revisa pull-up, alim
 
 ## Comprobación
 
-Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.
+Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../documentacion/interna/REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.

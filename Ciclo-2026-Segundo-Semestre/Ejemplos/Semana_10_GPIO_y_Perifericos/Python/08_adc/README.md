@@ -59,4 +59,4 @@ Si no aparece el dispositivo, activa I²C y comprueba dirección y alimentación
 
 ## Comprobación
 
-Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.
+Contrasta los resultados con el circuito real. Consulta las [pruebas de lógica](../../../pruebas/README.md) y el [registro de validación](../../../documentacion/interna/REGISTRO_PYTHON.md) para distinguir resultados comprobados y pendientes.

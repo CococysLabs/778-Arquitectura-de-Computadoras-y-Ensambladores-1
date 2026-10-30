@@ -1,5 +1,15 @@
 # Pruebas de Python y ARM64
 
+## Fundamentos de arquitectura sin hardware
+
+Desde `Ejemplos/`, sin instalar extras:
+
+```bash
+python3.13 -m unittest discover -s pruebas -p test_fundamentos.py -v
+```
+
+Cuatro pruebas ejecutan los programas de semana 02 y verifican su salida: bases numéricas, complemento a dos de ocho bits, máscaras/desplazamientos y bytes en ambos órdenes.
+
 ## Ensamblado, ejecución y depuración ARM64
 
 Instala las herramientas de la [guía ARM64](../documentacion/arm64.md). Desde la raíz `Ejemplos/`:
@@ -9,9 +19,9 @@ python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
 PRUEBAS_GDB=1 python3.13 -m unittest discover -s pruebas -p test_arm64.py -v
 ```
 
-También se comprueba la reconstrucción al cambiar una rutina compartida o de otra semana. La primera orden ejecuta QEMU y omite únicamente la prueba TCP de GDB. La segunda activa también esa sesión real de depuración. Las pruebas crean archivos y binarios temporales fuera del repositorio y los eliminan al terminar. Verifican EOF, menú, buffers, formato, límites numéricos, pila y registros preservados.
+También se comprueba la reconstrucción al cambiar una rutina compartida o de otra semana. La primera orden ejecuta QEMU y omite las cuatro pruebas que requieren sesiones TCP de GDB. La segunda activa también las cuatro pruebas reales de depuración. Las pruebas crean archivos y binarios temporales fuera del repositorio y los eliminan al terminar. Verifican EOF, menú, buffers, formato, límites numéricos, pila y registros preservados. También ejecutan los cinco programas nuevos de semanas 04 y 05, inspeccionan ELF y desensamblado de Hello World y comprueban con GDB registros, flags, arreglos y actualización de punteros.
 
-La ejecución nativa en Raspberry Pi y los perfiles visuales de VS Code siguen pendientes. Consulta la [validación vigente](../VALIDACION.md).
+La ejecución nativa en Raspberry Pi y los perfiles visuales de VS Code siguen pendientes. Consulta la [validación vigente](../documentacion/interna/VALIDACION.md).
 
 ## Pruebas de lógica sin hardware
 
@@ -76,4 +86,4 @@ PRUEBAS_GDB=1 PRUEBAS_SERVICIOS=1 .venv/bin/python -m unittest discover -s prueb
 
 Repite en una Pi 3/4 de 64 bits la instalación del extra `hardware`; registra modelo, versión del sistema, Python y dependencias. Comprueba circuitos, calibración de servo, lecturas y cierre. Los módulos que se importan en x86-64 no acreditan acceso al hardware.
 
-Consulta el [registro de resultados](../REGISTRO_PYTHON.md) para conocer qué comprobaciones se ejecutaron.
+Consulta el [registro de resultados](../documentacion/interna/REGISTRO_PYTHON.md) para conocer qué comprobaciones se ejecutaron.
