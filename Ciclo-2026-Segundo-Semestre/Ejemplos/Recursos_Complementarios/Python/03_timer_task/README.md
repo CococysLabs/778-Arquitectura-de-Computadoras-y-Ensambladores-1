@@ -1,0 +1,52 @@
+# Concurrencia: hilo y temporizador rearmable
+
+## Objetivo y funcionamiento
+
+Ejecutar una tarea periódica sin bloquear el trabajo principal y detenerla antes de liberar GPIO.
+
+Para comparar, ejecuta `uv run --locked --extra hardware Recursos_Complementarios/Python/03_timer_task/timer_rearm.py`. El cierre del hilo usa un evento; el temporizador protege el rearme y la cancelación con un bloqueo.
+
+## Requisitos
+
+Raspberry Pi 3/4, LED y resistencia de 330 Ω. Python 3.13. Consulta las [versiones y limitaciones del entorno](../../../documentacion/preparar_entorno.md).
+
+## Conexiones físicas
+
+Desconecta la alimentación antes de cablear. Los GPIO admiten lógica de 3,3 V, no 5 V. Usa numeración BCM en el código.
+
+| Componente | Conexión |
+| --- | --- |
+| LED | GPIO21 (pin físico 40), resistencia de 330 Ω y ánodo |
+| Cátodo | GND (pin físico 39) |
+
+## Instalación
+
+Desde la carpeta `Ejemplos/`, con uv y Python 3.13 disponibles:
+
+```bash
+uv sync --locked --extra hardware
+```
+
+Sigue la [preparación del entorno](../../../documentacion/preparar_entorno.md) para instalar requisitos del sistema y comprobar acceso a GPIO.
+
+## Ejecución
+
+Desde `Ejemplos/`, ejecuta un programa a la vez:
+
+```bash
+uv run --locked --extra hardware Recursos_Complementarios/Python/03_timer_task/heartbeat_thread.py
+```
+
+Detén el programa con Ctrl+C. Se liberan los GPIO al terminar.
+
+## Resultados esperados
+
+El hilo alterna el LED cada 0,5 s mientras el programa principal imprime una vez por segundo. El temporizador cambia el LED cada 3 s y crea la siguiente ejecución al terminar la anterior.
+
+## Limitaciones
+
+No son tareas de tiempo real: el intervalo incluye retrasos del sistema y, en el temporizador, el trabajo de cada callback.
+
+## Problemas frecuentes
+
+Si otro programa controla el mismo pin, ciérralo antes de iniciar. Para salir usa Ctrl+C en la terminal del proceso; espera el cierre antes de volver a ejecutarlo.

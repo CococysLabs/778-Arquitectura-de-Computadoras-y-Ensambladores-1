@@ -1,0 +1,48 @@
+# Compilación cruzada y emulación Linux AArch64.
+AS = aarch64-linux-gnu-as
+LD = aarch64-linux-gnu-ld
+RUN ?= qemu-aarch64
+BUILD ?= build
+SRC ?= Semana_03_Entorno_ARM64/ARM64/00_hello_world.s
+PROGRAMS := \
+    Semana_03_Entorno_ARM64/ARM64/00_hello_world.s \
+    Semana_04_Registros_e_Instrucciones_A64/ARM64/01_registros.s \
+    Semana_04_Registros_e_Instrucciones_A64/ARM64/02_aritmetica.s \
+    Semana_04_Registros_e_Instrucciones_A64/ARM64/03_logica_y_desplazamientos.s \
+    Semana_05_Memoria_y_Direccionamiento/ARM64/01_memoria_y_offsets.s \
+    Semana_05_Memoria_y_Direccionamiento/ARM64/02_pre_post_indexing.s \
+    Semana_06_Control_Flujo_y_Funciones/ARM64/01_if.s \
+    Semana_06_Control_Flujo_y_Funciones/ARM64/02_while.s \
+    Semana_06_Control_Flujo_y_Funciones/ARM64/10_select_menu.s \
+    Semana_07_Funciones_y_Pila/ARM64/07_sum_and_subtract.s \
+    Semana_08_Linux_y_Archivos/ARM64/03_read_file.s \
+    Semana_08_Linux_y_Archivos/ARM64/04_process_buffer.s \
+    Semana_08_Linux_y_Archivos/ARM64/09_read_input.s
+ifeq ($(filter $(SRC),$(PROGRAMS)),)
+$(error SRC debe ser un programa ejecutable del índice; las rutinas auxiliares no tienen _start)
+endif
+PROGRAM := $(patsubst %.s,%,$(SRC))
+OBJ := $(BUILD)/$(PROGRAM).o
+TARGET := $(BUILD)/$(PROGRAM)
+DEP := $(OBJ:.o=.d)
+ASFLAGS ?= -g -I $(dir $(SRC)) -I Semana_06_Control_Flujo_y_Funciones/ARM64 -I Semana_08_Linux_y_Archivos/ARM64 -I compartidos/ARM64
+LDFLAGS ?=
+
+.PHONY: all run clean info gdb-vscode
+all: $(TARGET)
+$(OBJ): $(SRC)
+	@mkdir -p "$(@D)"
+	$(AS) $(ASFLAGS) --MD "$(DEP)" -o "$@" "$<"
+$(TARGET): $(OBJ)
+	$(LD) $(LDFLAGS) -o "$@" "$<"
+run: $(TARGET)
+	$(RUN) "$(TARGET)"
+gdb-vscode: $(TARGET)
+	@echo "Starting QEMU and waiting for GDB on port 1234..."
+	@qemu-aarch64 -g 1234 "$(TARGET)" & pid=$$!; sleep 0.2; if kill -0 $$pid 2>/dev/null; then echo "QEMU_GDB_READY"; else wait $$pid; exit 1; fi; trap 'kill $$pid 2>/dev/null' INT TERM EXIT; wait $$pid
+
+clean:
+	rm -rf -- "$(BUILD)"
+info:
+	@echo "make -f Makefile.qemu SRC=Semana_03_Entorno_ARM64/ARM64/00_hello_world.s run"
+-include $(DEP)

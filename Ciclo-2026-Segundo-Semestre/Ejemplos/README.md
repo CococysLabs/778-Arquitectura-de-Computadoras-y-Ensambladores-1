@@ -1,27 +1,21 @@
-# Ejemplos del curso 778 — Segundo semestre de 2026
+# Ejemplos — Segundo semestre de 2026
 
-Recursos de clase para estudiar interfaces de entrada/salida con Python y programación en ensamblador AArch64. Cada bloque documenta requisitos, ejecución y resultados esperados.
+Cada semana incluye archivos, ejecución y resultados esperados.
 
-| Bloque | Contenido | Entorno |
-| --- | --- | --- |
-| [Python](Python/README.md) | GPIO, pulsadores, PWM, temporización, DHT11, LCD, HC-SR04, ADC, MQTT y MongoDB | Python 3.13; los circuitos requieren Pi 3/4 y los ejemplos de comunicación requieren servicios. |
-| [ARM64](ARM64/README.md) | Mensajes, bifurcaciones, bucles, archivos, conversiones, pila, entrada estándar y menú | GNU assembler y Linux AArch64 nativo o QEMU. |
-| [Pruebas](pruebas/README.md) | Verificaciones de lógica, servicios, ensamblado, ejecución y depuración | Herramientas indicadas en cada bloque. |
+| Semana | Contenido |
+| --- | --- |
+| [02: Fundamentos de arquitectura](Semana_02_Fundamentos_Arquitectura/README.md) | Bases numéricas, complemento a dos, bits, bytes y endianness con Python. |
+| [03: Entorno ARM64](Semana_03_Entorno_ARM64/README.md) | Ensamblar, ejecutar e inspeccionar Hello World con QEMU, readelf, objdump y GDB. |
+| [04: Registros e instrucciones A64](Semana_04_Registros_e_Instrucciones_A64/README.md) | Registros, aritmética, flags, lógica, máscaras y desplazamientos. |
+| [05: Memoria y direccionamiento](Semana_05_Memoria_y_Direccionamiento/README.md) | LDR/STR, arreglos, offsets y pre/post-indexing. |
+| [06: Control de flujo y funciones](Semana_06_Control_Flujo_y_Funciones/README.md) | If, while, menú y conversiones. |
+| [07: Funciones y pila](Semana_07_Funciones_y_Pila/README.md) | Suma/resta y vector en pila. |
+| [08: Linux y archivos](Semana_08_Linux_y_Archivos/README.md) | Archivos, buffers y entrada estándar. |
+| [10: GPIO y periféricos](Semana_10_GPIO_y_Perifericos/README.md) | LED, pulsadores, PWM, DHT11, LCD, HC-SR04 y ADC. |
 
-## Primeros pasos
+[Recursos complementarios](Recursos_Complementarios/README.md): hilos/Timer, MQTT y MongoDB.
 
-1. Abre el README del lenguaje que utilizarás.
-2. Instala solo sus requisitos y respeta el directorio de ejecución indicado.
-3. Comprueba conexiones y límites eléctricos antes de alimentar un circuito.
-4. Contrasta la salida con el resultado esperado y distingue datos sintéticos de mediciones.
-5. Revisa los estados de comprobación en [VALIDACION.md](VALIDACION.md).
+Abre esta carpeta **`Ejemplos/`** en terminal o VS Code: todos los comandos parten de aquí. Se comparten Makefiles, configuración Python, dependencias, herramientas y datos.
 
-Los nombres y la numeración son convenciones propuestas para este conjunto, sin atribuirles obligatoriedad institucional. Los identificadores no representan semanas del semestre.
-
-## Estado y procedencia
-
-Las pruebas disponibles de lógica, servicios locales y ejecución AArch64 se registran con su alcance real. Las pruebas físicas en Raspberry Pi y la calibración de periféricos siguen pendientes; no se presentan como verificadas.
-
-Consulta [atribuciones y permisos](ATRIBUCIONES.md), el [inventario de Python](INVENTARIO_PYTHON.md) y la [documentación de ARM64](ARM64/README.md). El inventario y registro Python conservan el alcance histórico de su primera etapa; la validación actual del conjunto está en [VALIDACION.md](VALIDACION.md).
-
-Se excluyen soluciones de exámenes, tareas evaluadas, prácticas resueltas, proyecto completo, shell reservado e imágenes sin atribución comprobada.
+- Preparación: [ARM64](documentacion/arm64.md), [Python](documentacion/preparar_entorno.md) y [conexiones GPIO](documentacion/gpio_y_sensores.md).
+- [Procedencia, atribuciones y situación de licencia](documentacion/ATRIBUCIONES.md).
